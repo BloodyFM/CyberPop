@@ -25,6 +25,11 @@ public:
 
 	void TakeDamage(float damage);
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Movement)
+	float MaxWalkSpeed;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Movement)
+	float JumpVelocity;
+
 private:
 	float maxHp;
 	float hp;

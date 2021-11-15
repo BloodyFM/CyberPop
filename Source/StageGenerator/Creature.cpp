@@ -5,6 +5,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "Camera/CameraComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 ACreature::ACreature()
@@ -31,6 +32,8 @@ ACreature::ACreature()
 	maxHp = 100.f;
 	hp = maxHp;
 
+	MaxWalkSpeed = 400.f;
+	JumpVelocity = 400.f;
 }
 
 void ACreature::TakeDamage(float damage)
@@ -42,6 +45,13 @@ void ACreature::TakeDamage(float damage)
 void ACreature::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Configure character movement
+	GetCharacterMovement()->bOrientRotationToMovement = true; // Character faces in the direction of input...
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.f, 0.0f); // ...at ths rotation rate
+	GetCharacterMovement()->JumpZVelocity = JumpVelocity; // Jumping power I guess
+	GetCharacterMovement()->AirControl = 0.5f; // Magic power that allows me to change direction in air
+	GetCharacterMovement()->MaxWalkSpeed = MaxWalkSpeed; // Sets Movement Speed
 	
 }
 
