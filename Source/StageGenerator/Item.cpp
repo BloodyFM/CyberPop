@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "Sound/SoundCue.h"
+#include "Creature.h"
 #include "Main1.h"
 
 // Sets default values

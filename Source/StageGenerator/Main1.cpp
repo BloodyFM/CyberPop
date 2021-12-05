@@ -3,8 +3,12 @@
 
 #include "Main1.h"
 #include "Creature.h"
+#include "Weapon.h"
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "Engine/StaticMeshSocket.h"
+#include "Engine/SkeletalMeshSocket.h"
 
 AMain1::AMain1()
 {
@@ -18,6 +22,9 @@ AMain1::AMain1()
 	SpeedBeforeDash = FVector(0.f);
 	DashStop = 0.1f;
 	bDashing = false;
+
+	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
+	WeaponMesh->SetupAttachment(GetRootComponent());
 
 }
 
@@ -83,5 +90,20 @@ void AMain1::StopDashing()
 void AMain1::ResetDash()
 {
 	bCanDash = true; // Enables Dash
+}
+
+void AMain1::Equip()
+{
+	/*WeaponMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Camera, ECollisionResponse::ECR_Ignore);
+	WeaponMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+
+	WeaponMesh->SetSimulatePhysics(false);
+
+	const USkeletalMeshSocket* RightHandSocket = this->GetMesh()->GetSocketByName("RightHandSocket");
+	if (RightHandSocket)
+	{
+		RightHandSocket->AttachActor(this, Char->GetMesh());
+		Char->SetEquippedWeapon(this);
+	}*/
 }
 

@@ -18,6 +18,8 @@ public:
 
 	AMain1();
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, category = "WeaponStaticMesh")
+		class UStaticMeshComponent* WeaponMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Movement)
 		float MovementSpeedDash;
@@ -59,6 +61,14 @@ public:
 
 	bool bLeftMousePressed;
 	bool bRightMousePressed;
+
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Items")
+		class AWeapon* EquippedWeapon;
+
+	FORCEINLINE void SetEquippedWeapon(AWeapon* WeaponToSet) { EquippedWeapon = WeaponToSet; }
+
+	void Equip();
 
 protected:
 	// Called when the game starts or when spawned
