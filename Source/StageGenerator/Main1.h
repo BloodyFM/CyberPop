@@ -70,6 +70,12 @@ public:
 
 	void Equip();
 
+	UPROPERTY(VisibleAnywhere,  BlueprintReadOnly, Category = "Anims")
+	bool bAttacking;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Anims")
+	class UAnimMontage* CombatMontage;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

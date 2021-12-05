@@ -7,8 +7,11 @@
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "Engine/StaticMeshSocket.h"
 #include "Engine/SkeletalMeshSocket.h"
+#include "Animation/AnimMontage.h"
+#include "Animation/AnimInstance.h"
 
 AMain1::AMain1()
 {
@@ -40,8 +43,10 @@ void AMain1::LeftMousePressed()
 	//UE_LOG(LogTemp, Warning, TEXT("Left Mouse Pressed"));
 
 	bLeftMousePressed = true;
-	Attack();
-
+	if (EquippedWeapon)
+	{
+		Attack();
+	}
 }
 void AMain1::LeftMouseReleased()
 {
@@ -61,7 +66,17 @@ void AMain1::RightMouseReleased()
 
 void AMain1::Attack()
 {
+	bAttacking = true;
 
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+
+	if (AnimInstance && CombatMontage)
+	{
+		AnimInstance->Montage_Play(CombatMontage, 1.35f);
+		AnimInstance->Montage_JumpToSection(("Attack_1"), CombatMontage);
+
+	}
+	
 }
 
 void AMain1::Dash()
