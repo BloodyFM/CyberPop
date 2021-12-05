@@ -51,4 +51,15 @@ public:
 	// Called for left and right input
 	void MoveRight(float Value);
 
+	//Left mouse action
+	virtual void LeftMousePressed();
+	virtual void LeftMouseReleased();
+
+	//Right mouse action
+	virtual void RightMousePressed();
+	virtual void RightMouseReleased();
+
+	bool bLeftMousePressed;
+	bool bRightMousePressed;
+
 };

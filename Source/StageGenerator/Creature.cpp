@@ -2,6 +2,7 @@
 
 
 #include "Creature.h"
+#include "Main1.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "Camera/CameraComponent.h"
@@ -34,6 +35,7 @@ ACreature::ACreature()
 
 	MaxWalkSpeed = 400.f;
 	JumpVelocity = 400.f;
+
 }
 
 void ACreature::TakeDamage(float damage)
@@ -76,8 +78,15 @@ void ACreature::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
+	PlayerInputComponent->BindAction("LeftMouseAction", IE_Pressed, this, &ACreature::LeftMousePressed);
+	PlayerInputComponent->BindAction("LeftMouseAction", IE_Released, this, &ACreature::LeftMouseReleased);
+
+	PlayerInputComponent->BindAction("RightMouseAction", IE_Pressed, this, &ACreature::RightMousePressed);
+	PlayerInputComponent->BindAction("RightMouseAction", IE_Released, this, &ACreature::RightMouseReleased);
+
 	PlayerInputComponent->BindAxis("MoveForward", this, &ACreature::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &ACreature::MoveRight);
+
 
 }
 
@@ -105,4 +114,20 @@ void ACreature::MoveRight(float Value)
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		AddMovementInput(Direction, Value);
 	}
+}
+
+void ACreature::LeftMousePressed()
+{
+}
+
+void ACreature::LeftMouseReleased()
+{
+}
+
+void ACreature::RightMousePressed()
+{
+}
+
+void ACreature::RightMouseReleased()
+{
 }
