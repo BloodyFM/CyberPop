@@ -43,7 +43,6 @@ void ACreature::TakeDMG(float damage)
 	hp -= damage;
 }
 
-// Called when the game starts or when spawned
 void ACreature::BeginPlay()
 {
 	Super::BeginPlay();
@@ -57,7 +56,6 @@ void ACreature::BeginPlay()
 	
 }
 
-// Called every frame
 void ACreature::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);

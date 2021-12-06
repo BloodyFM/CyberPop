@@ -38,6 +38,13 @@ void AMain1::BeginPlay()
 	GetCharacterMovement()->MaxWalkSpeed = MovementSpeedDash; // Sets Movement Speed
 }
 
+
+void AMain1::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+
 void AMain1::LeftMousePressed()
 {
 	//UE_LOG(LogTemp, Warning, TEXT("Left Mouse Pressed"));
