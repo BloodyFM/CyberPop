@@ -36,6 +36,8 @@ ACreature::ACreature()
 	MaxWalkSpeed = 400.f;
 	JumpVelocity = 400.f;
 
+	bIsMainCharacter = false;
+
 }
 
 void ACreature::TakeDMG(float damage)

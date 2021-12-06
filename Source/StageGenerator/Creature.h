@@ -64,4 +64,6 @@ public:
 	bool bLeftMousePressed;
 	bool bRightMousePressed;
 
+	bool bIsMainCharacter;
+
 };

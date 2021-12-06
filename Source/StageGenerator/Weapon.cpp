@@ -4,21 +4,39 @@
 #include "Weapon.h"
 #include "Main1.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/BoxComponent.h"
 #include "Engine/StaticMeshSocket.h"
 #include "Engine/SkeletalMeshSocket.h"
+#include "Sound/SoundCue.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Particles/ParticleSystemComponent.h"
+#include "GameFramework/PlayerController.h"
 
 AWeapon::AWeapon()
 {
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
 	StaticMesh->SetupAttachment(GetRootComponent());
 
+	CombatCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("CombatCollision"));
+	CombatCollision->SetupAttachment(GetRootComponent());
 
+	Damage = 100.f;
+
+	//bIsAttacking = false;
 }
 
 // Called when the game starts or when spawned
 void AWeapon::BeginPlay()
 {
 	Super::BeginPlay();
+
+	CombatCollision->OnComponentBeginOverlap.AddDynamic(this, &AWeapon::AttackBoxOnOverlapBegin);
+	CombatCollision->OnComponentEndOverlap.AddDynamic(this, &AWeapon::AttackBoxOnOverlapEnd);
+	CombatCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	CombatCollision->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+	CombatCollision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	CombatCollision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 }
 
 void AWeapon::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -36,11 +54,11 @@ void AWeapon::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* O
 		/*ACreature* Enemy = Cast<ACreature>(OtherActor);
 		if (Enemy)
 		{
-			Enemy->TakeDMG(100.f);
+			Enemy->TakeDMG(Damage);
 			if (Enemy->getHp() <= 0.f)
 			{
-				user->giveStack()
-				user->giveHp()
+				//user->giveStack()
+				//user->giveHp()
 			}
 		}*/
 	}
@@ -68,4 +86,36 @@ void AWeapon::Equip(AMain1* Char)
 			Char->SetEquippedWeapon(this);
 		}
 	}
+}
+
+void AWeapon::AttackBoxOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	ACreature* Enemy = Cast<ACreature>(OtherActor);
+	if (Enemy && !Enemy->bIsMainCharacter)
+	{
+		Enemy->TakeDMG(Damage);
+		if (Enemy->getHp() <= 0.f)
+		{
+			//user->giveStack()
+			//user->giveHp()
+		}
+	}
+
+
+}
+
+void AWeapon::AttackBoxOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+
+}
+
+
+void AWeapon::ActivateCollision()
+{
+	CombatCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+}
+
+void AWeapon::DeactivateCollision()
+{
+	CombatCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }

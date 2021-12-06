@@ -29,7 +29,28 @@ public:
 
 	void Equip(class AMain1* Char);
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item | Combat")
+		float Damage;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Main")
 	AMain1* user{ nullptr };
+
+	// The hitbox of the attack
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Attack")
+		class UBoxComponent* CombatCollision;
+
+	UFUNCTION()
+		virtual void AttackBoxOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION()
+		virtual void AttackBoxOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	//bool bIsAttacking;
+
+	UFUNCTION(BlueprintCallable)
+		void ActivateCollision();
+
+	UFUNCTION(BlueprintCallable)
+		void DeactivateCollision();
 
 protected:
 	// Called when the game starts or when spawned

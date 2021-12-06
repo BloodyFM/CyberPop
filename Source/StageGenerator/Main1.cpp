@@ -29,6 +29,8 @@ AMain1::AMain1()
 	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
 	WeaponMesh->SetupAttachment(GetRootComponent());
 
+	bIsMainCharacter = true;
+
 }
 
 void AMain1::BeginPlay()
