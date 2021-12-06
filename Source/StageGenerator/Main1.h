@@ -51,6 +51,12 @@ public:
 	UPROPERTY()
 		FTimerHandle DashHandle;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats)
+	float DashCharge;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats)
+	float DashChargeMax;
+
 	//Left mouse action
 	virtual void LeftMousePressed() override;
 	virtual void LeftMouseReleased() override;
@@ -80,6 +86,8 @@ public:
 	class UAnimMontage* CombatMontage;
 
 	void GiveHP();
+
+	void GiveDash();
 
 protected:
 	// Called when the game starts or when spawned

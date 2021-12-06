@@ -26,6 +26,10 @@ AMain1::AMain1()
 	DashStop = 0.1f;
 	bDashing = false;
 
+	DashCharge = 90.f;
+
+	DashCharge = DashChargeMax;
+
 	DrainRate = 5.f;
 
 	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
@@ -40,6 +44,7 @@ void AMain1::BeginPlay()
 	Super::BeginPlay();
 
 	GetCharacterMovement()->MaxWalkSpeed = MovementSpeedDash; // Sets Movement Speed
+	DashCharge = 90.f;
 }
 
 
@@ -69,7 +74,10 @@ void AMain1::LeftMouseReleased()
 void AMain1::RightMousePressed()
 {
 	bRightMousePressed = true;
-	Dash();
+	if (DashCharge >= 30.f)
+	{
+		Dash();
+	}
 }
 
 void AMain1::RightMouseReleased()
@@ -84,6 +92,15 @@ void AMain1::GiveHP()
 	if (hp > maxHp)
 	{
 		hp = maxHp;
+	}
+}
+
+void AMain1::GiveDash()
+{
+	DashCharge += 30.f;
+	if (DashCharge > DashChargeMax)
+	{
+		DashCharge = DashChargeMax;
 	}
 }
 
@@ -112,6 +129,8 @@ void AMain1::Dash()
 		LaunchCharacter(FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0.1f) * DashDistance, true, true);
 		bCanDash = false; // Disables Dash
 		GetWorldTimerManager().SetTimer(DashHandle, this, &AMain1::StopDashing, DashStop, false); // Sets timer to stop dashing
+
+		DashCharge -= 30.f;
 	}
 	UE_LOG(LogTemp, Warning, TEXT("Dash()"));
 }

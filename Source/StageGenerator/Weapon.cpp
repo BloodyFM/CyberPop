@@ -98,6 +98,7 @@ void AWeapon::AttackBoxOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 		{
 			//user->giveStack();
 			user->GiveHP();
+			user->GiveDash();
 		}
 	}
 
