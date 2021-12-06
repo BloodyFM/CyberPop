@@ -20,7 +20,7 @@ AMain1::AMain1()
 
 	MovementSpeedDash = 600.f;
 	DashDistance = 5000.f;
-	DashCooldown = 0.5f;
+	DashCooldown = 0.1f;
 	bCanDash = true;
 	SpeedBeforeDash = FVector(0.f);
 	DashStop = 0.1f;
@@ -53,6 +53,11 @@ void AMain1::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	hp -= DeltaTime * DrainRate;
+	DashCharge += DeltaTime * DrainRate;
+	if (DashCharge > DashChargeMax)
+	{
+		DashCharge = DashChargeMax;
+	}
 
 }
 
