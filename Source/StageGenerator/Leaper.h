@@ -40,8 +40,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 	USphereComponent* CombatSphere;
 
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
-	//class AAIController* AIController;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
+	class AAIController* AIController;
 
 	// The hitbox of the attack
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Attack")

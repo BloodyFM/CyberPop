@@ -40,7 +40,7 @@ void ALeaper::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//AIController = Cast<AAIController>(GetController());
+	AIController = Cast<AAIController>(GetController());
 
 	AggroSphere->OnComponentBeginOverlap.AddDynamic(this, &ALeaper::AggroSphereOnOverlapBegin);
 	AggroSphere->OnComponentEndOverlap.AddDynamic(this, &ALeaper::AggroSphereOnOverlapEnd);
@@ -119,16 +119,16 @@ void ALeaper::MoveToTarget(class AMain1* Target)
 {
 	SetLeaperMovementStatus(ELeaperMovementStatus::EMS_MoveToTarget);
 
-	//if (AIController)
-	//{
-		/*FAIMoveRequest MoveRequest; // Struct containing the target
+	if (AIController)
+	{
+		FAIMoveRequest MoveRequest; // Struct containing the target
 		MoveRequest.SetGoalActor(Target);
 		MoveRequest.SetAcceptanceRadius(25.0f); // minmum distance between EnemyHitBox and TargetHitBox before the enemy stops moving
 
 		FNavPathSharedPtr NavPath; // Will store navigatin data for the Enemy AI to use
 
 		AIController->MoveTo(MoveRequest, &NavPath); // Makes the Enemy follow player until it gets close enough to attack
-		*/
+		
 		/**
 		auto PathPoints = NavPath->GetPathPoints();
 		for (auto Point : PathPoints)
@@ -138,7 +138,7 @@ void ALeaper::MoveToTarget(class AMain1* Target)
 			UKismetSystemLibrary::DrawDebugSphere(this, Location, 25.f, 8, FLinearColor::Red, 10.f, 1.5f);
 		}
 		*/
-	//}
+	}
 }
 
 void ALeaper::AttackBoxOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

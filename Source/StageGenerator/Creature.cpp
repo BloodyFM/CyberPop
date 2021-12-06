@@ -41,6 +41,7 @@ ACreature::ACreature()
 void ACreature::TakeDMG(float damage)
 {
 	hp -= damage;
+	UE_LOG(LogTemp, Warning, TEXT("Slap"));
 }
 
 void ACreature::BeginPlay()
