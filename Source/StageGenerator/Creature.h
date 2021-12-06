@@ -32,9 +32,14 @@ public:
 
 	float getHp() { return hp; }
 
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats)
+		float maxHp;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats)
+		float hp;
+
+
 private:
-	float maxHp;
-	float hp;
 
 protected:
 	// Called when the game starts or when spawned

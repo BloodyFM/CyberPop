@@ -26,6 +26,8 @@ AMain1::AMain1()
 	DashStop = 0.1f;
 	bDashing = false;
 
+	DrainRate = 5.f;
+
 	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
 	WeaponMesh->SetupAttachment(GetRootComponent());
 
@@ -44,6 +46,8 @@ void AMain1::BeginPlay()
 void AMain1::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	hp -= DeltaTime * DrainRate;
 
 }
 
@@ -71,6 +75,16 @@ void AMain1::RightMousePressed()
 void AMain1::RightMouseReleased()
 {
 	bRightMousePressed = false;
+}
+
+void AMain1::GiveHP()
+{
+	hp += 30.f;
+
+	if (hp > maxHp)
+	{
+		hp = maxHp;
+	}
 }
 
 void AMain1::Attack()

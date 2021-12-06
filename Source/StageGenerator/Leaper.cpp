@@ -30,7 +30,7 @@ ALeaper::ALeaper()
 	bOverlappingCombatSphere = false;
 	MainInHitRange = false;
 
-	Damage = 100.f;
+	Damage = 50.f;
 	MovementSpeed = 450.f;
 	TurnRate = 250.f;
 

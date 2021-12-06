@@ -96,8 +96,8 @@ void AWeapon::AttackBoxOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 		Enemy->TakeDMG(Damage);
 		if (Enemy->getHp() <= 0.f)
 		{
-			//user->giveStack()
-			//user->giveHp()
+			//user->giveStack();
+			user->GiveHP();
 		}
 	}
 

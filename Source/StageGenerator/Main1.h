@@ -62,6 +62,9 @@ public:
 	bool bLeftMousePressed;
 	bool bRightMousePressed;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	float DrainRate;
+
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Items")
 		class AWeapon* EquippedWeapon;
@@ -75,6 +78,8 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Anims")
 	class UAnimMontage* CombatMontage;
+
+	void GiveHP();
 
 protected:
 	// Called when the game starts or when spawned
