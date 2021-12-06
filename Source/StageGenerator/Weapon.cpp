@@ -31,7 +31,18 @@ void AWeapon::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* O
 		if (Main1)
 		{
 			Equip(Main1);
+			user = Main1;
 		}
+		/*ACreature* Enemy = Cast<ACreature>(OtherActor);
+		if (Enemy)
+		{
+			Enemy->TakeDMG(100.f);
+			if (Enemy->getHp() <= 0.f)
+			{
+				user->giveStack()
+				user->giveHp()
+			}
+		}*/
 	}
 }
 

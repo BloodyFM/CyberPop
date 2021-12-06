@@ -23,12 +23,14 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 
-	void TakeDamage(float damage);
+	void TakeDMG(float damage);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Movement)
 	float MaxWalkSpeed;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Movement)
 	float JumpVelocity;
+
+	float getHp() { return hp; }
 
 private:
 	float maxHp;

@@ -38,7 +38,7 @@ ACreature::ACreature()
 
 }
 
-void ACreature::TakeDamage(float damage)
+void ACreature::TakeDMG(float damage)
 {
 	hp -= damage;
 }
@@ -65,6 +65,7 @@ void ACreature::Tick(float DeltaTime)
 	if (hp <= 0.f)
 	{
 		//Creature dies
+		this->Destroy();
 	}
 
 }

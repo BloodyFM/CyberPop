@@ -29,6 +29,8 @@ public:
 
 	void Equip(class AMain1* Char);
 
+	AMain1* user{ nullptr };
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
