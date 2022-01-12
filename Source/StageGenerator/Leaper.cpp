@@ -106,10 +106,14 @@ void ALeaper::CombatSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent,
 		{
 			if (Main)
 			{
-				SetLeaperMovementStatus(ELeaperMovementStatus::EMS_MoveToTarget);
+				//SetLeaperMovementStatus(ELeaperMovementStatus::EMS_MoveToTarget);
 				bOverlappingCombatSphere = false;
-				MoveToTarget(Main);
-				CombatTarget = nullptr;
+				//MoveToTarget(Main);
+				if (LeaperMovementStatus != ELeaperMovementStatus::EMS_Attacking)
+				{
+					MoveToTarget(CombatTarget);
+					CombatTarget = nullptr;
+				}
 			}
 		}
 	}
@@ -118,6 +122,7 @@ void ALeaper::CombatSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent,
 void ALeaper::MoveToTarget(class AMain1* Target)
 {
 	SetLeaperMovementStatus(ELeaperMovementStatus::EMS_MoveToTarget);
+	CombatTarget = nullptr;
 
 	if (AIController)
 	{
