@@ -192,15 +192,30 @@ void ALeaper::Dash(class AMain1* Target)
 
 void ALeaper::AttackBoxOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	MainInHitRange = true;
+	if (OtherActor)
+	{
+		AMain1* Main = Cast<AMain1>(OtherActor);
+		if (Main)
+		{
+			MainInHitRange = true;
 
-	UE_LOG(LogTemp, Warning, TEXT("AttackBoxOnOverlapBegin()"));
+			UE_LOG(LogTemp, Warning, TEXT("AttackBoxOnOverlapBegin()"));
+		}
+	}
 }
 
 void ALeaper::AttackBoxOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	MainInHitRange = false;
-	UE_LOG(LogTemp, Warning, TEXT("AttackBoxOnOverlapEnd()"));
+	if (OtherActor)
+	{
+		AMain1* Main = Cast<AMain1>(OtherActor);
+		if (Main)
+		{
+			MainInHitRange = false;
+
+			UE_LOG(LogTemp, Warning, TEXT("AttackBoxOnOverlapEnd()"));
+		}
+	}
 }
 
 void ALeaper::HitPlayer()
