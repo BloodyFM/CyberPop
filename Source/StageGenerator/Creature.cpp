@@ -17,8 +17,8 @@ ACreature::ACreature()
 	// Create CameraBoom (gets the camera closer to the player if obstructed)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(GetRootComponent());
-	CameraBoom->TargetArmLength = 300.f;// Sets distance between Camera and player
-	CameraBoom->bUsePawnControlRotation = true;// Rotate Camera based on controller
+	CameraBoom->TargetArmLength = 800.f;// Sets distance between Camera and player
+	CameraBoom->bUsePawnControlRotation = false;
 
 	// Create FollowCamera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
