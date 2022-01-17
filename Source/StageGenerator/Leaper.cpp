@@ -77,17 +77,16 @@ void ALeaper::Tick(float DeltaTime)
 			FVector force = distance * 500.f;
 			SetActorLocation(GetActorLocation() + (force * DeltaTime));
 		}
-
-		if (bOverlappingCombatSphere && CombatTarget)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("spin"));
-			FRotator LookAtYaw = GetLookAtRotationYaw(CombatTarget->GetActorLocation());
-			FRotator InterpRotation = FMath::RInterpTo(GetActorRotation(), LookAtYaw, DeltaTime, TurnRate);
-
-			SetActorRotation(InterpRotation);
-		}
 	}
 
+	if (bOverlappingCombatSphere && CombatTarget)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("spin"));
+		FRotator LookAtYaw = GetLookAtRotationYaw(CombatTarget->GetActorLocation());
+		FRotator InterpRotation = FMath::RInterpTo(GetActorRotation(), LookAtYaw, DeltaTime, TurnRate);
+
+		SetActorRotation(InterpRotation);
+	}
 }
 
 FRotator ALeaper::GetLookAtRotationYaw(FVector Target)
