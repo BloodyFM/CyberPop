@@ -61,11 +61,15 @@ void ABullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* O
 	if (OtherActor)
 	{
 		ACreature* HitTarget = Cast<ACreature>(OtherActor);
-		if (bHarmsMain == HitTarget->bIsMainCharacter)
+		if (HitTarget)
 		{
-			HitTarget->TakeDMG(Damage);
-			OverlapUtility();
-			UE_LOG(LogTemp, Warning, TEXT("Overlap"));
+			bool Ignore = OtherComp->ComponentHasTag("Ignore");
+			if (bHarmsMain == HitTarget->bIsMainCharacter && !Ignore)
+			{
+				HitTarget->TakeDMG(Damage);
+				OverlapUtility();
+				UE_LOG(LogTemp, Warning, TEXT("Overlap"));
+			}
 		}
 	}
 }
