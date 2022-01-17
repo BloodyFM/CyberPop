@@ -8,6 +8,7 @@
 #include "AIController.h"
 #include "AIModule.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Main1.h"
 
 
@@ -76,8 +77,24 @@ void ALeaper::Tick(float DeltaTime)
 			FVector force = distance * 500.f;
 			SetActorLocation(GetActorLocation() + (force * DeltaTime));
 		}
+
+		if (bOverlappingCombatSphere && CombatTarget)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("spin"));
+			FRotator LookAtYaw = GetLookAtRotationYaw(CombatTarget->GetActorLocation());
+			FRotator InterpRotation = FMath::RInterpTo(GetActorRotation(), LookAtYaw, DeltaTime, TurnRate);
+
+			SetActorRotation(InterpRotation);
+		}
 	}
 
+}
+
+FRotator ALeaper::GetLookAtRotationYaw(FVector Target)
+{
+	FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Target);
+	FRotator YawLookAtRotation = FRotator(0.f, LookAtRotation.Yaw, 0.f);
+	return YawLookAtRotation;
 }
 
 void ALeaper::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

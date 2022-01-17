@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Creature.h"
+#include "Main1.h"
 #include "Grunt.generated.h"
 
 
@@ -11,7 +12,7 @@ UENUM(BlueprintType)
 enum class EGruntMovementStatus :uint8
 {
 	EMS_Idle			UMETA(DisplayName = "Idle"),
-	EMS_Retreat			UMETA(DisplayName = " Retreat"),
+	EMS_Retreat			UMETA(DisplayName = "Retreat"),
 	EMS_Attacking		UMETA(DisplayName = "Attacking"),
 
 	EMS_MAX				UMETA(DisplayName = "DefaultMAX")
@@ -43,6 +44,8 @@ public:
 	float MovementSpeed;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
 	float TurnRate;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
+	bool bInterpToTarget{ false };
 
 protected:
 	// Called when the game starts or when spawned
@@ -51,6 +54,9 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	
+	UFUNCTION()
+		FRotator GetLookAtRotationYaw(FVector Target);
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -58,5 +64,6 @@ public:
 	UFUNCTION()
 		virtual void AggroSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
+	AMain1* CombatTarget { nullptr };
 };

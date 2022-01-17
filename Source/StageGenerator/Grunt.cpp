@@ -1,9 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#include "Grunt.h"
 #include "Components/SphereComponent.h"
 #include "AIController.h"
 #include "AIModule.h"
-#include "Grunt.h"
+#include "Kismet/KismetMathLibrary.h"
 
 
 AGrunt::AGrunt()
@@ -14,6 +15,7 @@ AGrunt::AGrunt()
 	AggroSphere = CreateDefaultSubobject<USphereComponent>(TEXT("AggroSphere"));
 	AggroSphere->SetupAttachment(GetRootComponent());
 	AggroSphere->InitSphereRadius(600.f);
+
 }
 
 void AGrunt::BeginPlay()
@@ -30,6 +32,20 @@ void AGrunt::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (bInterpToTarget && CombatTarget)
+	{
+		FRotator LookAtYaw = GetLookAtRotationYaw(CombatTarget->GetActorLocation());
+		FRotator InterpRotation = FMath::RInterpTo(GetActorRotation(), LookAtYaw, DeltaTime, TurnRate);
+
+		SetActorRotation(InterpRotation);
+	}
+}
+
+FRotator AGrunt::GetLookAtRotationYaw(FVector Target)
+{
+	FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Target);
+	FRotator YawLookAtRotation = FRotator(0.f, LookAtRotation.Yaw, 0.f);
+	return YawLookAtRotation;
 }
 
 void AGrunt::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -42,6 +58,11 @@ void AGrunt::AggroSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent,
 {
 	if (OtherActor)
 	{
-
+		AMain1* Main = Cast<AMain1>(OtherActor);
+		if (Main)
+		{
+			bInterpToTarget = true;
+			CombatTarget = Main;
+		}
 	}
 }

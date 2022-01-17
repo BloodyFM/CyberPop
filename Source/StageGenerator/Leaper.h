@@ -66,6 +66,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION()
+		FRotator GetLookAtRotationYaw(FVector Target);
+
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
@@ -93,7 +96,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
 	bool bOverlappingCombatSphere;
 
-	// Attack Target (atm for use in the animasion BP)
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
 	AMain1* CombatTarget { nullptr };
 
