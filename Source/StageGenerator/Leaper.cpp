@@ -24,6 +24,10 @@ ALeaper::ALeaper()
 	CombatSphere->SetupAttachment(GetRootComponent());
 	CombatSphere->InitSphereRadius(75.f);
 
+	DashSphere = CreateDefaultSubobject<USphereComponent>(TEXT("DashSphere"));
+	DashSphere->SetupAttachment(GetRootComponent());
+	DashSphere->InitSphereRadius(100.f);
+
 	AttackBox = CreateDefaultSubobject<UBoxComponent>(TEXT("AttackBox"));
 	AttackBox->SetupAttachment(GetRootComponent());
 
@@ -48,6 +52,8 @@ void ALeaper::BeginPlay()
 	CombatSphere->OnComponentBeginOverlap.AddDynamic(this, &ALeaper::CombatSphereOnOverlapBegin);
 	CombatSphere->OnComponentEndOverlap.AddDynamic(this, &ALeaper::CombatSphereOnOverlapEnd);
 
+	DashSphere->OnComponentBeginOverlap.AddDynamic(this, &ALeaper::DashSphereOnOverlapBegin);
+
 	AttackBox->OnComponentBeginOverlap.AddDynamic(this, &ALeaper::AttackBoxOnOverlapBegin);
 	AttackBox->OnComponentEndOverlap.AddDynamic(this, &ALeaper::AttackBoxOnOverlapEnd);
 
@@ -56,6 +62,21 @@ void ALeaper::BeginPlay()
 void ALeaper::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (bIsDashing)
+	{
+		FVector distance = DashTargetLocation - GetActorLocation();
+		if (distance.Size() <= 70.f)
+		{
+			bIsDashing = false;
+		}
+		else
+		{
+			distance.Normalize();
+			FVector force = distance * 500.f;
+			SetActorLocation(GetActorLocation() + (force * DeltaTime));
+		}
+	}
 
 }
 
@@ -119,6 +140,23 @@ void ALeaper::CombatSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent,
 	}
 }
 
+void ALeaper::DashSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor)
+	{
+		AMain1* Main = Cast<AMain1>(OtherActor);
+		{
+			if (Main)
+			{
+				CombatTarget = Main;
+				SetLeaperMovementStatus(ELeaperMovementStatus::EMS_Attacking);
+				Dash(CombatTarget);
+			}
+		}
+	}
+}
+
+
 void ALeaper::MoveToTarget(class AMain1* Target)
 {
 	SetLeaperMovementStatus(ELeaperMovementStatus::EMS_MoveToTarget);
@@ -144,6 +182,12 @@ void ALeaper::MoveToTarget(class AMain1* Target)
 		}
 		*/
 	}
+}
+
+void ALeaper::Dash(class AMain1* Target)
+{
+	bIsDashing = true;
+	DashTargetLocation = Target->GetActorLocation();
 }
 
 void ALeaper::AttackBoxOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

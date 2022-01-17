@@ -36,9 +36,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 	class USphereComponent* AggroSphere;
 
-	// Sphere that will make ai attack  if the player overlaps
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 	USphereComponent* CombatSphere;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
+	USphereComponent* DashSphere;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 	class AAIController* AIController;
@@ -77,8 +79,15 @@ public:
 	UFUNCTION()
 		virtual void CombatSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
+	UFUNCTION()
+		virtual void DashSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 	UFUNCTION(BlueprintCallable)
 	void MoveToTarget(class AMain1* Target);
+
+	void Dash(class AMain1* Target);
+	bool bIsDashing { false };
+	FVector DashTargetLocation { 0.f };
 
 	// tells the AI if the player is within mele range
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
