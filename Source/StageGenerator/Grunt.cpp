@@ -5,6 +5,7 @@
 #include "AIController.h"
 #include "AIModule.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Bullet.h"
 
 
 AGrunt::AGrunt()
@@ -16,6 +17,7 @@ AGrunt::AGrunt()
 	AggroSphere->SetupAttachment(GetRootComponent());
 	AggroSphere->InitSphereRadius(600.f);
 
+	Ammo = MaxAmmo;
 }
 
 void AGrunt::BeginPlay()
@@ -38,6 +40,31 @@ void AGrunt::Tick(float DeltaTime)
 		FRotator InterpRotation = FMath::RInterpTo(GetActorRotation(), LookAtYaw, DeltaTime, TurnRate);
 
 		SetActorRotation(InterpRotation);
+	}
+
+	if (GruntMovementStatus == EGruntMovementStatus::EMS_Attacking)
+	{
+		if (timeSinceLastShot >= shootingDelayFocused)
+		{
+			if (Ammo > 0)
+			{
+				FRotator Rotation = GetActorRotation();
+
+				FTransform BulletTransform;
+				BulletTransform.SetLocation(GetActorLocation() + (GetActorForwardVector() * 10.f) + FVector(0.f, 0.f, 100.f));
+				BulletTransform.SetRotation(Rotation.Quaternion());
+				BulletTransform.SetScale3D(FVector(1.f));
+
+				GetWorld()->SpawnActor<ABullet>(BulletClass, BulletTransform);
+				Ammo -= 1;
+				timeSinceLastShot = 0.f;
+			}
+			else
+			{
+				SetGruntMovementStatus(EGruntMovementStatus::EMS_Reload);
+			}
+		}
+		timeSinceLastShot += DeltaTime;
 	}
 }
 
@@ -63,6 +90,7 @@ void AGrunt::AggroSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent,
 		{
 			bInterpToTarget = true;
 			CombatTarget = Main;
+			SetGruntMovementStatus(EGruntMovementStatus::EMS_Attacking);
 		}
 	}
 }

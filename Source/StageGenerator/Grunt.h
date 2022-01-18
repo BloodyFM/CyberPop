@@ -14,6 +14,7 @@ enum class EGruntMovementStatus :uint8
 	EMS_Idle			UMETA(DisplayName = "Idle"),
 	EMS_Retreat			UMETA(DisplayName = "Retreat"),
 	EMS_Attacking		UMETA(DisplayName = "Attacking"),
+	EMS_Reload			UMETA(DisplayName = "Reload"),
 
 	EMS_MAX				UMETA(DisplayName = "DefaultMAX")
 };
@@ -30,7 +31,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
 	EGruntMovementStatus GruntMovementStatus;
 
-	FORCEINLINE void SetLeaperMovementStatus(EGruntMovementStatus Status) { GruntMovementStatus = Status; }
+	FORCEINLINE void SetGruntMovementStatus(EGruntMovementStatus Status) { GruntMovementStatus = Status; }
 
 	// Sphere that will aggro the ai if the player overlaps
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
@@ -46,6 +47,23 @@ public:
 	float TurnRate;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
 	bool bInterpToTarget{ false };
+
+	// Combat values
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	int32 MaxAmmo = 15;
+	int32 Ammo;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	float shootingDelayFocused{ 0.1f };
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	float shootingDelaySpread{ 1.f };
+	float timeSinceLastShot{ 0.f };
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	float inaccuracy{ 1.f };
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+	TSubclassOf<class ABullet> BulletClass;
+
 
 protected:
 	// Called when the game starts or when spawned
