@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundCue.h"
 #include "Creature.h"
+#include "Main1.h"
 
 
 ABullet::ABullet()
@@ -66,8 +67,24 @@ void ABullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* O
 			bool Ignore = OtherComp->ComponentHasTag("Ignore");
 			if (bHarmsMain == HitTarget->bIsMainCharacter && !Ignore)
 			{
-				HitTarget->TakeDMG(Damage);
-				OverlapUtility();
+				AMain1* MainTarget = Cast<AMain1>(OtherActor);
+				if (MainTarget)
+				{
+					if (MainTarget->bDashing == true)
+					{
+						UE_LOG(LogTemp, Warning, TEXT("Player dodges bullets"));
+					}
+					else
+					{
+						HitTarget->TakeDMG(Damage);
+						OverlapUtility();
+					}
+				}
+				else
+				{
+					HitTarget->TakeDMG(Damage);
+					OverlapUtility();
+				}
 				UE_LOG(LogTemp, Warning, TEXT("Overlap"));
 			}
 		}
