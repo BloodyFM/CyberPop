@@ -42,9 +42,9 @@ public:
 
 	// Movement values
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
-	float MovementSpeed;
+	float MovementSpeed{ 350.f };
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
-	float TurnRate;
+	float TurnRate{ 250.f };
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
 	bool bInterpToTarget{ false };
 
@@ -61,6 +61,7 @@ public:
 	float ReloadDelay{ 3.f }; // temporary untill I get animation
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	float inaccuracy{ 10.f };
+	bool bEnemyToClose{ false };
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
@@ -83,6 +84,8 @@ public:
 
 	UFUNCTION()
 		virtual void AggroSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	UFUNCTION()
+		virtual void AggroSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
 	AMain1* CombatTarget { nullptr };
