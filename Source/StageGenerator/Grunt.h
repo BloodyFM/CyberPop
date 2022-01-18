@@ -58,7 +58,9 @@ public:
 	float shootingDelaySpread{ 1.f };
 	float timeSinceLastShot{ 0.f };
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
-	float inaccuracy{ 1.f };
+	float ReloadDelay{ 3.f }; // temporary untill I get animation
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	float inaccuracy{ 10.f };
 
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")

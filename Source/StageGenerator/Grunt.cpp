@@ -5,6 +5,7 @@
 #include "AIController.h"
 #include "AIModule.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Math/UnrealMathUtility.h"
 #include "Bullet.h"
 
 
@@ -49,6 +50,7 @@ void AGrunt::Tick(float DeltaTime)
 			if (Ammo > 0)
 			{
 				FRotator Rotation = GetActorRotation();
+				Rotation.Yaw += FMath::RandRange(-inaccuracy, inaccuracy);
 
 				FTransform BulletTransform;
 				BulletTransform.SetLocation(GetActorLocation() + (GetActorForwardVector() * 10.f) + FVector(0.f, 0.f, 100.f));
@@ -62,9 +64,21 @@ void AGrunt::Tick(float DeltaTime)
 			else
 			{
 				SetGruntMovementStatus(EGruntMovementStatus::EMS_Reload);
+				timeSinceLastShot = 0.f;
 			}
 		}
 		timeSinceLastShot += DeltaTime;
+	}
+
+	if (GruntMovementStatus == EGruntMovementStatus::EMS_Reload)
+	{
+		timeSinceLastShot += DeltaTime;
+		if (timeSinceLastShot >= ReloadDelay)
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("Ready to shoot"));
+			Ammo = MaxAmmo;
+			SetGruntMovementStatus(EGruntMovementStatus::EMS_Attacking);
+		}
 	}
 }
 
