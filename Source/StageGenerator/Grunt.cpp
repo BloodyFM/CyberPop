@@ -28,6 +28,7 @@ void AGrunt::BeginPlay()
 	AIController = Cast<AAIController>(GetController());
 
 	AggroSphere->OnComponentBeginOverlap.AddDynamic(this, &AGrunt::AggroSphereOnOverlapBegin);
+	AggroSphere->OnComponentEndOverlap.AddDynamic(this, &AGrunt::AggroSphereOnOverlapEnd);
 
 }
 
@@ -70,6 +71,48 @@ void AGrunt::Tick(float DeltaTime)
 		timeSinceLastShot += DeltaTime;
 	}
 
+	if (GruntMovementStatus == EGruntMovementStatus::EMS_Retreat)
+	{
+		if (timeSinceLastShot >= shootingDelaySpread)
+		{
+			if (Ammo > 0)
+			{
+				FRotator Rotation = GetActorRotation();
+				Rotation.Yaw -= 10.f;
+
+				FTransform BulletTransform;
+				BulletTransform.SetLocation(GetActorLocation() + (GetActorForwardVector() * 10.f) + FVector(0.f, 0.f, 100.f));
+				BulletTransform.SetRotation(Rotation.Quaternion());
+				BulletTransform.SetScale3D(FVector(1.f));
+
+				GetWorld()->SpawnActor<ABullet>(BulletClass, BulletTransform);
+				Rotation.Yaw += 5.f;
+				BulletTransform.SetRotation(Rotation.Quaternion());
+				GetWorld()->SpawnActor<ABullet>(BulletClass, BulletTransform);
+				Rotation.Yaw += 5.f;
+				BulletTransform.SetRotation(Rotation.Quaternion());
+				GetWorld()->SpawnActor<ABullet>(BulletClass, BulletTransform);
+				Rotation.Yaw += 5.f;
+				BulletTransform.SetRotation(Rotation.Quaternion());
+				GetWorld()->SpawnActor<ABullet>(BulletClass, BulletTransform);
+				Rotation.Yaw += 5.f;
+				BulletTransform.SetRotation(Rotation.Quaternion());
+				GetWorld()->SpawnActor<ABullet>(BulletClass, BulletTransform);
+
+				Ammo -= 5;
+				timeSinceLastShot = 0.f;
+			}
+			else
+			{
+				SetGruntMovementStatus(EGruntMovementStatus::EMS_Reload);
+				timeSinceLastShot = 0.f;
+			}
+		}
+		timeSinceLastShot += DeltaTime;
+		FVector Movement =  -(GetActorForwardVector() * MovementSpeed);
+		SetActorLocation(GetActorLocation() + (Movement * DeltaTime), true);
+	}
+
 	if (GruntMovementStatus == EGruntMovementStatus::EMS_Reload)
 	{
 		timeSinceLastShot += DeltaTime;
@@ -77,7 +120,14 @@ void AGrunt::Tick(float DeltaTime)
 		{
 			//UE_LOG(LogTemp, Warning, TEXT("Ready to shoot"));
 			Ammo = MaxAmmo;
-			SetGruntMovementStatus(EGruntMovementStatus::EMS_Attacking);
+			if (bEnemyToClose)
+			{
+				SetGruntMovementStatus(EGruntMovementStatus::EMS_Retreat);
+			}
+			else
+			{
+				SetGruntMovementStatus(EGruntMovementStatus::EMS_Attacking);
+			}
 		}
 	}
 }
@@ -103,8 +153,26 @@ void AGrunt::AggroSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent,
 		if (Main)
 		{
 			bInterpToTarget = true;
+			bEnemyToClose = true;
 			CombatTarget = Main;
-			SetGruntMovementStatus(EGruntMovementStatus::EMS_Attacking);
+			SetGruntMovementStatus(EGruntMovementStatus::EMS_Retreat);
+		}
+	}
+}
+
+void AGrunt::AggroSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	//UE_LOG(LogTemp, Warning, TEXT("Focus"));
+	if (OtherActor)
+	{
+		AMain1* Main = Cast<AMain1>(OtherActor);
+		if (Main)
+		{
+			bEnemyToClose = false;
+			if (GruntMovementStatus != EGruntMovementStatus::EMS_Reload)
+			{
+				SetGruntMovementStatus(EGruntMovementStatus::EMS_Attacking);
+			}
 		}
 	}
 }
