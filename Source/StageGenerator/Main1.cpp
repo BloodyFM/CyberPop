@@ -37,6 +37,8 @@ AMain1::AMain1()
 
 	bIsMainCharacter = true;
 
+	bCanAttack = true;
+
 }
 
 void AMain1::BeginPlay()
@@ -66,9 +68,10 @@ void AMain1::LeftMousePressed()
 	//UE_LOG(LogTemp, Warning, TEXT("Left Mouse Pressed"));
 
 	bLeftMousePressed = true;
-	if (EquippedWeapon)
+	if (EquippedWeapon && bCanAttack)
 	{
 		Attack();
+		bCanAttack = false;
 	}
 }
 void AMain1::LeftMouseReleased()
