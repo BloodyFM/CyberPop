@@ -42,6 +42,8 @@ public:
 		float DashCooldown;
 	UPROPERTY()
 		bool bCanDash;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack")
+		bool bCanAttack;
 	UPROPERTY()
 		bool bDashing;
 	UPROPERTY()
