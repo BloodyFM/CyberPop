@@ -3,6 +3,8 @@
 
 #include "Barrier.h"
 #include "Components/StaticMeshComponent.h"
+#include "CombatSpawner.h"
+
 
 // Sets default values
 ABarrier::ABarrier()

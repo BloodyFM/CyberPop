@@ -2,6 +2,10 @@
 
 
 #include "CombatSpawner.h"
+#include "Components/BoxComponent.h"
+#include "Barrier.h"
+#include "Creature.h"
+
 
 // Sets default values
 ACombatSpawner::ACombatSpawner()
@@ -9,12 +13,21 @@ ACombatSpawner::ACombatSpawner()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	SpawnBox = CreateDefaultSubobject<UBoxComponent>(TEXT("SpawnBox"));
+	SetRootComponent(SpawnBox);
+
+	TriggerBox = CreateDefaultSubobject<UBoxComponent>(TEXT("TriggerBox"));
+	TriggerBox->SetupAttachment(GetRootComponent());
+
 }
 
 // Called when the game starts or when spawned
 void ACombatSpawner::BeginPlay()
 {
 	Super::BeginPlay();
+
+	TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &ACombatSpawner::TriggerBoxOnOverlapBegin);
+	//TriggerBox->OnComponentEndOverlap.AddDynamic(this, &ACombatSpawner::TriggerBoxOnOverlapEnd);
 	
 }
 
@@ -25,3 +38,45 @@ void ACombatSpawner::Tick(float DeltaTime)
 
 }
 
+void ACombatSpawner::TriggerBoxOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor)
+	{
+		ACreature* Main = Cast<ACreature>(OtherActor);
+		if (Main)
+		{
+			//UE_LOG(LogTemp, Warning, TEXT("barriers: %d"), BarrierSpawns.Num());
+			for (int32 i = 0; i < BarrierSpawns.Num(); i++)
+			{
+				SavePointerToBarrier(GetWorld()->SpawnActor<ABarrier>(BarrierClass, BarrierSpawns[i]));
+			}
+		}
+	}
+}
+
+/*void ACombatSpawner::TriggerBoxOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (OtherActor)
+	{
+		ACreature* Main = Cast<ACreature>(OtherActor);
+		if (Main)
+		{
+			DestroyBarriers();
+		}
+	}
+}*/
+
+
+void ACombatSpawner::SavePointerToBarrier(ABarrier* barrier)
+{
+	SpawnedBarriers.Add(barrier);
+}
+
+void ACombatSpawner::DestroyBarriers()
+{
+	for (int32 i = 0; i < SpawnedBarriers.Num(); i++)
+	{
+		SpawnedBarriers[i]->Unlock();
+	}
+	SpawnedBarriers.Empty();
+}
