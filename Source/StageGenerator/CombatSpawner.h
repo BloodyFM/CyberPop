@@ -30,6 +30,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	TSubclassOf<class ABarrier> BarrierClass;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Spawning")
+	TArray<class ACreature*> SpawnedCreatures;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawning")
+	TArray<TSubclassOf<class ACreature>> CreatureClasses;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Spawning")
+	TArray<int> SpawnNumber;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -40,6 +49,9 @@ public:
 
 	UFUNCTION()
 	void SavePointerToBarrier(class ABarrier* barrier);
+
+	UFUNCTION()
+	void SavePointerToCreature(class ACreature* creature);
 
 	UFUNCTION()
 	void DestroyBarriers();

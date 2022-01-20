@@ -3,6 +3,7 @@
 
 #include "CombatSpawner.h"
 #include "Components/BoxComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Barrier.h"
 #include "Creature.h"
 
@@ -28,6 +29,17 @@ void ACombatSpawner::BeginPlay()
 
 	TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &ACombatSpawner::TriggerBoxOnOverlapBegin);
 	//TriggerBox->OnComponentEndOverlap.AddDynamic(this, &ACombatSpawner::TriggerBoxOnOverlapEnd);
+
+	for (int32 i = 0; i < CreatureClasses.Num(); i++)
+	{
+		FVector Extent = SpawnBox->GetScaledBoxExtent();
+		FVector Origin = SpawnBox->GetComponentLocation();
+
+		FVector Point = UKismetMathLibrary::RandomPointInBoundingBox(Origin, Extent);
+		FTransform SpawnTransform;
+		SpawnTransform.SetLocation(Point);
+		SavePointerToCreature(GetWorld()->SpawnActor<ACreature>(CreatureClasses[i], SpawnTransform));
+	}
 	
 }
 
@@ -36,6 +48,10 @@ void ACombatSpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (SpawnedCreatures.Num() == 0)
+	{
+		DestroyBarriers();
+	}
 }
 
 void ACombatSpawner::TriggerBoxOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -49,6 +65,11 @@ void ACombatSpawner::TriggerBoxOnOverlapBegin(UPrimitiveComponent* OverlappedCom
 			for (int32 i = 0; i < BarrierSpawns.Num(); i++)
 			{
 				SavePointerToBarrier(GetWorld()->SpawnActor<ABarrier>(BarrierClass, BarrierSpawns[i]));
+			}
+			TriggerBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			for (int32 i = 0; i < SpawnedCreatures.Num(); i++)
+			{
+				//give enemies the ref to the player and aggro them
 			}
 		}
 	}
@@ -70,6 +91,11 @@ void ACombatSpawner::TriggerBoxOnOverlapBegin(UPrimitiveComponent* OverlappedCom
 void ACombatSpawner::SavePointerToBarrier(ABarrier* barrier)
 {
 	SpawnedBarriers.Add(barrier);
+}
+
+void ACombatSpawner::SavePointerToCreature(ACreature* creature)
+{
+	SpawnedCreatures.Add(creature);
 }
 
 void ACombatSpawner::DestroyBarriers()
