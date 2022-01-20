@@ -18,6 +18,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Projectile")
 		class UStaticMeshComponent* Mesh;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Spawning")
+		class ACombatSpawner* SpawnedBarriers{ nullptr };
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

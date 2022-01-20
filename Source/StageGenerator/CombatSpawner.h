@@ -24,6 +24,9 @@ public:
 	UPROPERTY(EditAnywhere, meta = (MakeEditWidget = "true"), Category = "Spawning")
 	TArray<FTransform> BarrierSpawns;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Spawning")
+	TArray<class ABarrier*> SpawnedBarriers;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 	TSubclassOf<class ABarrier> BarrierClass;
 
@@ -36,6 +39,14 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
+	void SavePointerToBarrier(class ABarrier* barrier);
+
+	UFUNCTION()
+	void DestroyBarriers();
+
+	UFUNCTION()
 	virtual void TriggerBoxOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
+	//UFUNCTION()
+	//virtual void TriggerBoxOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 };

@@ -27,6 +27,7 @@ void ACombatSpawner::BeginPlay()
 	Super::BeginPlay();
 
 	TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &ACombatSpawner::TriggerBoxOnOverlapBegin);
+	//TriggerBox->OnComponentEndOverlap.AddDynamic(this, &ACombatSpawner::TriggerBoxOnOverlapEnd);
 	
 }
 
@@ -44,10 +45,38 @@ void ACombatSpawner::TriggerBoxOnOverlapBegin(UPrimitiveComponent* OverlappedCom
 		ACreature* Main = Cast<ACreature>(OtherActor);
 		if (Main)
 		{
+			//UE_LOG(LogTemp, Warning, TEXT("barriers: %d"), BarrierSpawns.Num());
 			for (int32 i = 0; i < BarrierSpawns.Num(); i++)
 			{
-				GetWorld()->SpawnActor<ABarrier>(BarrierClass, BarrierSpawns[0]);
+				SavePointerToBarrier(GetWorld()->SpawnActor<ABarrier>(BarrierClass, BarrierSpawns[i]));
 			}
 		}
 	}
+}
+
+/*void ACombatSpawner::TriggerBoxOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (OtherActor)
+	{
+		ACreature* Main = Cast<ACreature>(OtherActor);
+		if (Main)
+		{
+			DestroyBarriers();
+		}
+	}
+}*/
+
+
+void ACombatSpawner::SavePointerToBarrier(ABarrier* barrier)
+{
+	SpawnedBarriers.Add(barrier);
+}
+
+void ACombatSpawner::DestroyBarriers()
+{
+	for (int32 i = 0; i < SpawnedBarriers.Num(); i++)
+	{
+		SpawnedBarriers[i]->Unlock();
+	}
+	SpawnedBarriers.Empty();
 }
