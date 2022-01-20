@@ -132,9 +132,10 @@ void AMain1::Dash()
 	if (bCanDash)
 	{
 		bDashing = true;
+		GetCharacterMovement()->RotationRate = FRotator(0.0f, 0.f, 0.0f);
 		SpeedBeforeDash = FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0.f) * MovementSpeedDash;
 		GetCharacterMovement()->BrakingFrictionFactor = 0.f; // Removes friction
-		LaunchCharacter(FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0.1f) * DashDistance, true, true);
+		LaunchCharacter(FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0.0f) * DashDistance, true, true);
 		bCanDash = false; // Disables Dash
 		GetWorldTimerManager().SetTimer(DashHandle, this, &AMain1::StopDashing, DashStop, false); // Sets timer to stop dashing
 
@@ -149,6 +150,7 @@ void AMain1::StopDashing()
 	GetCharacterMovement()->StopMovementImmediately();
 	LaunchCharacter(SpeedBeforeDash, true, true);
 	GetCharacterMovement()->BrakingFrictionFactor = 2.f; // Sets friction back to default
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.f, 0.0f);
 	GetWorldTimerManager().SetTimer(DashHandle, this, &AMain1::ResetDash, DashCooldown, false); // Sets timer to Enable dash again
 }
 
