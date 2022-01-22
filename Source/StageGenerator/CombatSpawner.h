@@ -61,4 +61,6 @@ public:
 
 	//UFUNCTION()
 	//virtual void TriggerBoxOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	void RemoveServant(class ACreature* servant);
 };

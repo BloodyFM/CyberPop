@@ -73,4 +73,6 @@ public:
 
 	bool bIsMainCharacter;
 
+	class ACombatSpawner* Master{ nullptr };
+
 };

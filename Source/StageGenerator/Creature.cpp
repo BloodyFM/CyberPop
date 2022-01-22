@@ -7,6 +7,7 @@
 #include "GameFramework/PlayerController.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "CombatSpawner.h"
 
 // Sets default values
 ACreature::ACreature()
@@ -66,6 +67,8 @@ void ACreature::Tick(float DeltaTime)
 	if (hp <= 0.f)
 	{
 		//Creature dies
+		if (Master)
+			Master->RemoveServant(this);
 		this->Destroy();
 	}
 

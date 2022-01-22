@@ -40,6 +40,7 @@ void ACombatSpawner::BeginPlay()
 		SpawnTransform.SetLocation(Point);
 		ACreature* SpawnedCreature = GetWorld()->SpawnActor<ACreature>(CreatureClasses[i], SpawnTransform);
 		SpawnedCreature->SpawnDefaultController();
+		SpawnedCreature->Master = this;
 		SavePointerToCreature(SpawnedCreature);
 	}
 	
@@ -111,4 +112,16 @@ void ACombatSpawner::DestroyBarriers()
 		SpawnedBarriers[i]->Unlock();
 	}
 	SpawnedBarriers.Empty();
+}
+
+void ACombatSpawner::RemoveServant(ACreature* servant)
+{
+	for (int32 i = 0; i < SpawnedCreatures.Num(); i++)
+	{
+		if (SpawnedCreatures[i] == servant)
+		{
+			SpawnedCreatures.RemoveAt(i);
+			break;
+		}
+	}
 }
