@@ -9,7 +9,6 @@
 #include "AIModule.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
-//#include "Main1.h"
 
 
 ALeaper::ALeaper()

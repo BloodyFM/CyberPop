@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Creature.h"
-#include "Main1.h"
 #include "Grunt.generated.h"
 
 
@@ -88,5 +87,5 @@ public:
 		virtual void AggroSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
-	AMain1* CombatTarget { nullptr };
+	ACreature* CombatTarget { nullptr };
 };

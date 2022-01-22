@@ -149,13 +149,16 @@ void AGrunt::AggroSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent,
 {
 	if (OtherActor)
 	{
-		AMain1* Main = Cast<AMain1>(OtherActor);
+		ACreature* Main = Cast<ACreature>(OtherActor);
 		if (Main)
 		{
-			bInterpToTarget = true;
-			bEnemyToClose = true;
-			CombatTarget = Main;
-			SetGruntMovementStatus(EGruntMovementStatus::EMS_Retreat);
+			if (Main->bIsMainCharacter)
+			{
+				bInterpToTarget = true;
+				bEnemyToClose = true;
+				CombatTarget = Main;
+				SetGruntMovementStatus(EGruntMovementStatus::EMS_Retreat);
+			}
 		}
 	}
 }
@@ -165,13 +168,16 @@ void AGrunt::AggroSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, A
 	//UE_LOG(LogTemp, Warning, TEXT("Focus"));
 	if (OtherActor)
 	{
-		AMain1* Main = Cast<AMain1>(OtherActor);
+		ACreature* Main = Cast<ACreature>(OtherActor);
 		if (Main)
 		{
-			bEnemyToClose = false;
-			if (GruntMovementStatus != EGruntMovementStatus::EMS_Reload)
+			if (Main->bIsMainCharacter)
 			{
-				SetGruntMovementStatus(EGruntMovementStatus::EMS_Attacking);
+				bEnemyToClose = false;
+				if (GruntMovementStatus != EGruntMovementStatus::EMS_Reload)
+				{
+					SetGruntMovementStatus(EGruntMovementStatus::EMS_Attacking);
+				}
 			}
 		}
 	}
