@@ -87,10 +87,14 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void MoveToTarget(class ACreature* Target);
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
+	float MoveToTolerance{ 25.f };
 
 	void Dash(class ACreature* Target);
 	bool bIsDashing { false };
 	FVector DashTargetLocation { 0.f };
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
+	float DashTolerance{100.f};
 
 	// tells the AI if the player is within mele range
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
