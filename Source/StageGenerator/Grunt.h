@@ -88,4 +88,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
 	ACreature* CombatTarget { nullptr };
+
+	virtual void Aggro(class ACreature* target) override;
+
 };

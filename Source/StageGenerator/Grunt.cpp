@@ -109,7 +109,7 @@ void AGrunt::Tick(float DeltaTime)
 			}
 		}
 		timeSinceLastShot += DeltaTime;
-		FVector Movement =  -(GetActorForwardVector() * MovementSpeed);
+		FVector Movement =  -(GetActorForwardVector() * MovementSpeed/2);
 		SetActorLocation(GetActorLocation() + (Movement * DeltaTime), true);
 	}
 
@@ -180,5 +180,18 @@ void AGrunt::AggroSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, A
 				}
 			}
 		}
+	}
+}
+
+void AGrunt::Aggro(ACreature* target)
+{
+	CombatTarget = target;
+	if (bEnemyToClose)
+	{
+		SetGruntMovementStatus(EGruntMovementStatus::EMS_Retreat);
+	}
+	else
+	{
+		SetGruntMovementStatus(EGruntMovementStatus::EMS_Attacking);
 	}
 }

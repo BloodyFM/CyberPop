@@ -66,6 +66,8 @@ public:
 	virtual void RightMousePressed();
 	virtual void RightMouseReleased();
 
+	virtual void Aggro(class ACreature* target);
+
 	bool bLeftMousePressed;
 	bool bRightMousePressed;
 

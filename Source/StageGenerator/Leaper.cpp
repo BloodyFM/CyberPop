@@ -251,3 +251,8 @@ void ALeaper::HitPlayer()
 	}
 	UE_LOG(LogTemp, Warning, TEXT("HitPlayer()"));
 }
+
+void ALeaper::Aggro(ACreature* target)
+{
+	MoveToTarget(target);
+}

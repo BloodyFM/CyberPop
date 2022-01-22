@@ -110,5 +110,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void HitPlayer();
+
+	virtual void Aggro(class ACreature* target) override;
 	
 };

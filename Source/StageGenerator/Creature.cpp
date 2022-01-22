@@ -133,3 +133,7 @@ void ACreature::RightMousePressed()
 void ACreature::RightMouseReleased()
 {
 }
+
+void ACreature::Aggro(ACreature* target)
+{
+}
