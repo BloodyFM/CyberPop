@@ -186,6 +186,7 @@ void AGrunt::AggroSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, A
 void AGrunt::Aggro(ACreature* target)
 {
 	CombatTarget = target;
+	bInterpToTarget = true;
 	if (bEnemyToClose)
 	{
 		SetGruntMovementStatus(EGruntMovementStatus::EMS_Retreat);
