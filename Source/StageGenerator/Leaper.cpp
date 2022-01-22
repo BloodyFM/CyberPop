@@ -255,5 +255,6 @@ void ALeaper::HitPlayer()
 
 void ALeaper::Aggro(ACreature* target)
 {
+	AIController = Cast<AAIController>(GetController());
 	MoveToTarget(target);
 }

@@ -41,7 +41,6 @@ void ACombatSpawner::BeginPlay()
 		ACreature* SpawnedCreature = GetWorld()->SpawnActor<ACreature>(CreatureClasses[i], SpawnTransform);
 		SpawnedCreature->SpawnDefaultController();
 		SavePointerToCreature(SpawnedCreature);
-		
 	}
 	
 }
