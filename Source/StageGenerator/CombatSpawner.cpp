@@ -38,7 +38,10 @@ void ACombatSpawner::BeginPlay()
 		FVector Point = UKismetMathLibrary::RandomPointInBoundingBox(Origin, Extent);
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(Point);
-		SavePointerToCreature(GetWorld()->SpawnActor<ACreature>(CreatureClasses[i], SpawnTransform));
+		ACreature* SpawnedCreature = GetWorld()->SpawnActor<ACreature>(CreatureClasses[i], SpawnTransform);
+		SpawnedCreature->SpawnDefaultController();
+		SavePointerToCreature(SpawnedCreature);
+		
 	}
 	
 }
