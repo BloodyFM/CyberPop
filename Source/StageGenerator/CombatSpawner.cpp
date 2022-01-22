@@ -6,8 +6,6 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Barrier.h"
 #include "Creature.h"
-#include "Leaper.h"
-#include "Grunt.h"
 
 
 // Sets default values
@@ -74,16 +72,7 @@ void ACombatSpawner::TriggerBoxOnOverlapBegin(UPrimitiveComponent* OverlappedCom
 				for (int32 i = 0; i < SpawnedCreatures.Num(); i++)
 				{
 					//give enemies the ref to the player and aggro them
-					ALeaper* Enemy = Cast<ALeaper>(SpawnedCreatures[i]);
-					if (Enemy)
-					{
-						Enemy->Aggro(Main);
-					}
-					AGrunt* Enemy1 = Cast<AGrunt>(SpawnedCreatures[i]);
-					if (Enemy1)
-					{
-						Enemy1->Aggro(Main);
-					}
+					SpawnedCreatures[i]->Aggro(Main);
 				}
 			}
 		}

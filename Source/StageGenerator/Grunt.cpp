@@ -106,6 +106,7 @@ void AGrunt::Tick(float DeltaTime)
 			{
 				SetGruntMovementStatus(EGruntMovementStatus::EMS_Reload);
 				timeSinceLastShot = 0.f;
+				bInterpToTarget = false;
 			}
 		}
 		timeSinceLastShot += DeltaTime;
@@ -128,6 +129,7 @@ void AGrunt::Tick(float DeltaTime)
 			{
 				SetGruntMovementStatus(EGruntMovementStatus::EMS_Attacking);
 			}
+			bInterpToTarget = true;
 		}
 	}
 }
