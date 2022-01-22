@@ -86,9 +86,9 @@ public:
 		virtual void DashSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	UFUNCTION(BlueprintCallable)
-	void MoveToTarget(class AMain1* Target);
+	void MoveToTarget(class ACreature* Target);
 
-	void Dash(class AMain1* Target);
+	void Dash(class ACreature* Target);
 	bool bIsDashing { false };
 	FVector DashTargetLocation { 0.f };
 
@@ -97,7 +97,7 @@ public:
 	bool bOverlappingCombatSphere;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
-	AMain1* CombatTarget { nullptr };
+	ACreature* CombatTarget { nullptr };
 
 	// tells the AI if the player is within mele range of the hit
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")

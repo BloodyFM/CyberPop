@@ -9,7 +9,7 @@
 #include "AIModule.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Main1.h"
+//#include "Main1.h"
 
 
 ALeaper::ALeaper()
@@ -106,10 +106,11 @@ void ALeaper::AggroSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent
 {
 	if (OtherActor)
 	{
-		AMain1* Main = Cast<AMain1>(OtherActor);
+		ACreature* Main = Cast<ACreature>(OtherActor);
 		if (Main)
 		{
-			MoveToTarget(Main);
+			if (Main->bIsMainCharacter)
+				MoveToTarget(Main);
 		}
 	}
 }
@@ -123,9 +124,10 @@ void ALeaper::CombatSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponen
 {
 	if (OtherActor)
 	{
-		AMain1* Main = Cast<AMain1>(OtherActor);
+		ACreature* Main = Cast<ACreature>(OtherActor);
+		if (Main)
 		{
-			if (Main)
+			if (Main->bIsMainCharacter)
 			{
 				CombatTarget = Main;
 				bOverlappingCombatSphere = true;
@@ -139,9 +141,10 @@ void ALeaper::CombatSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent,
 {
 	if (OtherActor)
 	{
-		AMain1* Main = Cast<AMain1>(OtherActor);
+		ACreature* Main = Cast<ACreature>(OtherActor);
+		if (Main)
 		{
-			if (Main)
+			if (Main->bIsMainCharacter)
 			{
 				//SetLeaperMovementStatus(ELeaperMovementStatus::EMS_MoveToTarget);
 				bOverlappingCombatSphere = false;
@@ -160,9 +163,10 @@ void ALeaper::DashSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent,
 {
 	if (OtherActor)
 	{
-		AMain1* Main = Cast<AMain1>(OtherActor);
+		ACreature* Main = Cast<ACreature>(OtherActor);
+		if (Main)
 		{
-			if (Main)
+			if (Main->bIsMainCharacter)
 			{
 				CombatTarget = Main;
 				SetLeaperMovementStatus(ELeaperMovementStatus::EMS_Attacking);
@@ -173,7 +177,7 @@ void ALeaper::DashSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent,
 }
 
 
-void ALeaper::MoveToTarget(class AMain1* Target)
+void ALeaper::MoveToTarget(class ACreature* Target)
 {
 	SetLeaperMovementStatus(ELeaperMovementStatus::EMS_MoveToTarget);
 	CombatTarget = nullptr;
@@ -200,7 +204,7 @@ void ALeaper::MoveToTarget(class AMain1* Target)
 	}
 }
 
-void ALeaper::Dash(class AMain1* Target)
+void ALeaper::Dash(class ACreature* Target)
 {
 	bIsDashing = true;
 	DashTargetLocation = Target->GetActorLocation();
@@ -210,10 +214,11 @@ void ALeaper::AttackBoxOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 {
 	if (OtherActor)
 	{
-		AMain1* Main = Cast<AMain1>(OtherActor);
+		ACreature* Main = Cast<ACreature>(OtherActor);
 		if (Main)
 		{
-			MainInHitRange = true;
+			if (Main->bIsMainCharacter)
+				MainInHitRange = true;
 
 			UE_LOG(LogTemp, Warning, TEXT("AttackBoxOnOverlapBegin()"));
 		}
@@ -224,10 +229,11 @@ void ALeaper::AttackBoxOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AA
 {
 	if (OtherActor)
 	{
-		AMain1* Main = Cast<AMain1>(OtherActor);
+		ACreature* Main = Cast<ACreature>(OtherActor);
 		if (Main)
 		{
-			MainInHitRange = false;
+			if (Main->bIsMainCharacter)
+				MainInHitRange = false;
 
 			UE_LOG(LogTemp, Warning, TEXT("AttackBoxOnOverlapEnd()"));
 		}
@@ -241,7 +247,7 @@ void ALeaper::HitPlayer()
 		// cast TakeDMG function on player
 		if (CombatTarget)
 		{
-			Cast<ACreature>(CombatTarget)->TakeDMG(Damage);
+			CombatTarget->TakeDMG(Damage);
 		}
 	}
 	UE_LOG(LogTemp, Warning, TEXT("HitPlayer()"));
