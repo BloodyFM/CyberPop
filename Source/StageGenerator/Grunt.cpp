@@ -187,6 +187,7 @@ void AGrunt::AggroSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, A
 
 void AGrunt::Aggro(ACreature* target)
 {
+	AIController = Cast<AAIController>(GetController());
 	CombatTarget = target;
 	bInterpToTarget = true;
 	if (bEnemyToClose)
