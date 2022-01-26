@@ -4,6 +4,7 @@
 #include "CombatSpawner.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Math/Vector.h"
 #include "Barrier.h"
 #include "Creature.h"
 
@@ -69,7 +70,13 @@ void ACombatSpawner::TriggerBoxOnOverlapBegin(UPrimitiveComponent* OverlappedCom
 				//UE_LOG(LogTemp, Warning, TEXT("barriers: %d"), BarrierSpawns.Num());
 				for (int32 i = 0; i < BarrierSpawns.Num(); i++)
 				{
-					SavePointerToBarrier(GetWorld()->SpawnActor<ABarrier>(BarrierClass, BarrierSpawns[i]));
+					FTransform transform = BarrierSpawns[i];
+					FRotator rotation = transform.GetRotation().Rotator() + GetActorRotation();
+					FVector position = transform.GetLocation().RotateAngleAxis(GetActorRotation().Yaw, FVector(0.f, 0.f, 1.f));
+					position += GetActorLocation();
+					transform.SetRotation(rotation.Quaternion());
+					transform.SetLocation(position);
+					SavePointerToBarrier(GetWorld()->SpawnActor<ABarrier>(BarrierClass, transform));
 				}
 				TriggerBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 				for (int32 i = 0; i < SpawnedCreatures.Num(); i++)
