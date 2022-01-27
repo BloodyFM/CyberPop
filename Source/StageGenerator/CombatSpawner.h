@@ -36,8 +36,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawning")
 	TArray<TSubclassOf<class ACreature>> CreatureClasses;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Spawning")
-	TArray<int> SpawnNumber;
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Spawning")
+	//TArray<int> SpawnNumber;
 
 protected:
 	// Called when the game starts or when spawned

@@ -4,6 +4,7 @@
 #include "CombatSpawner.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Math/UnrealMathUtility.h"
 #include "Math/Vector.h"
 #include "Barrier.h"
 #include "Creature.h"
@@ -33,16 +34,20 @@ void ACombatSpawner::BeginPlay()
 
 	for (int32 i = 0; i < CreatureClasses.Num(); i++)
 	{
-		FVector Extent = SpawnBox->GetScaledBoxExtent();
-		FVector Origin = SpawnBox->GetComponentLocation();
+		int32 ammount = FMath::RandRange(2, 8);
+		for (int32 j = 0; j < ammount; j++)
+		{
+			FVector Extent = SpawnBox->GetScaledBoxExtent();
+			FVector Origin = SpawnBox->GetComponentLocation();
 
-		FVector Point = UKismetMathLibrary::RandomPointInBoundingBox(Origin, Extent);
-		FTransform SpawnTransform;
-		SpawnTransform.SetLocation(Point);
-		ACreature* SpawnedCreature = GetWorld()->SpawnActor<ACreature>(CreatureClasses[i], SpawnTransform);
-		SpawnedCreature->SpawnDefaultController();
-		SpawnedCreature->Master = this;
-		SavePointerToCreature(SpawnedCreature);
+			FVector Point = UKismetMathLibrary::RandomPointInBoundingBox(Origin, Extent);
+			FTransform SpawnTransform;
+			SpawnTransform.SetLocation(Point);
+			ACreature* SpawnedCreature = GetWorld()->SpawnActor<ACreature>(CreatureClasses[i], SpawnTransform);
+			SpawnedCreature->SpawnDefaultController();
+			SpawnedCreature->Master = this;
+			SavePointerToCreature(SpawnedCreature);
+		}
 	}
 	
 }
