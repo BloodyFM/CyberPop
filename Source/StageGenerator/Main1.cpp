@@ -39,23 +39,33 @@ AMain1::AMain1()
 
 	bCanAttack = true;
 
+	//LevelName = GetWorld()->GetMapName();
+	
+
 }
 
 void AMain1::BeginPlay()
 {
 	Super::BeginPlay();
-
 	GetCharacterMovement()->MaxWalkSpeed = MovementSpeedDash; // Sets Movement Speed
 	DashCharge = 90.f;
+
+	FString LevelName = GetWorld()->GetMapName();
+	LevelName.RemoveFromStart(GetWorld()->StreamingLevelsPrefix);
+	//UE_LOG(LogTemp, Warning, TEXT("%s"), *LevelName);
 }
 
 
 void AMain1::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	hp -= DeltaTime * DrainRate;
-	DashCharge += DeltaTime * DrainRate;
+	FString LevelName = GetWorld()->GetMapName();
+	LevelName.RemoveFromStart(GetWorld()->StreamingLevelsPrefix);
+	if (LevelName != "CharSelect")
+	{
+		hp -= DeltaTime * DrainRate;
+		DashCharge += DeltaTime * DrainRate;
+	}
 	if (DashCharge > DashChargeMax)
 	{
 		DashCharge = DashChargeMax;

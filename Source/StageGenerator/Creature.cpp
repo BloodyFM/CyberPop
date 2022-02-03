@@ -79,19 +79,22 @@ void ACreature::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	check(PlayerInputComponent);
+	FString LevelName = GetWorld()->GetMapName();
+	LevelName.RemoveFromStart(GetWorld()->StreamingLevelsPrefix);
+	if (LevelName != "CharSelect")
+	{
+		PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+		PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+		PlayerInputComponent->BindAction("LeftMouseAction", IE_Pressed, this, &ACreature::LeftMousePressed);
+		PlayerInputComponent->BindAction("LeftMouseAction", IE_Released, this, &ACreature::LeftMouseReleased);
 
-	PlayerInputComponent->BindAction("LeftMouseAction", IE_Pressed, this, &ACreature::LeftMousePressed);
-	PlayerInputComponent->BindAction("LeftMouseAction", IE_Released, this, &ACreature::LeftMouseReleased);
+		PlayerInputComponent->BindAction("RightMouseAction", IE_Pressed, this, &ACreature::RightMousePressed);
+		PlayerInputComponent->BindAction("RightMouseAction", IE_Released, this, &ACreature::RightMouseReleased);
 
-	PlayerInputComponent->BindAction("RightMouseAction", IE_Pressed, this, &ACreature::RightMousePressed);
-	PlayerInputComponent->BindAction("RightMouseAction", IE_Released, this, &ACreature::RightMouseReleased);
-
-	PlayerInputComponent->BindAxis("MoveForward", this, &ACreature::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &ACreature::MoveRight);
-
+		PlayerInputComponent->BindAxis("MoveForward", this, &ACreature::MoveForward);
+		PlayerInputComponent->BindAxis("MoveRight", this, &ACreature::MoveRight);
+	}
 
 }
 
