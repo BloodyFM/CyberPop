@@ -44,6 +44,14 @@ public:
 		bool bCanDash;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack")
 		bool bCanAttack;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack")
+		bool bNotAttacked;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack")
+		bool bAttack1Over;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack")
+		bool bAttack2Over;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack")
+		bool bAttack3Over;
 	UPROPERTY()
 		bool bDashing;
 	UPROPERTY()

@@ -40,6 +40,11 @@ AMain1::AMain1()
 	bCanAttack = true;
 
 	//LevelName = GetWorld()->GetMapName();
+
+	bNotAttacked = true;
+	bAttack1Over = false;
+	bAttack2Over = false;
+	bAttack3Over = false;
 	
 
 }
@@ -130,8 +135,28 @@ void AMain1::Attack()
 
 	if (AnimInstance && CombatMontage)
 	{
-		AnimInstance->Montage_Play(CombatMontage, 1.35f);
-		AnimInstance->Montage_JumpToSection(("Attack"), CombatMontage);
+		if (bNotAttacked || bAttack3Over)
+		{
+			AnimInstance->Montage_Play(CombatMontage, 1.35f);
+			AnimInstance->Montage_JumpToSection(("Attack"), CombatMontage);
+			bNotAttacked = false;
+			bAttack1Over = true;
+			bAttack3Over = false;
+		}
+		else if (bAttack1Over)
+		{
+			AnimInstance->Montage_Play(CombatMontage, 1.35f);
+			AnimInstance->Montage_JumpToSection(("Attack2"), CombatMontage);
+			bAttack2Over = true;
+			bAttack1Over = false;
+		}
+		else if (bAttack2Over)
+		{
+			AnimInstance->Montage_Play(CombatMontage, 1.35f);
+			AnimInstance->Montage_JumpToSection(("Attack3"), CombatMontage);
+			bAttack3Over = true;
+			bAttack2Over = false;
+		}
 
 	}
 	
