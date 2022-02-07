@@ -4,6 +4,7 @@
 #include "CombatSpawner.h"
 #include "Components/BoxComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/GameplayStatics.h" // to get player
 #include "Math/UnrealMathUtility.h"
 #include "Math/Vector.h"
 #include "Barrier.h"
@@ -31,6 +32,15 @@ void ACombatSpawner::BeginPlay()
 
 	TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &ACombatSpawner::TriggerBoxOnOverlapBegin);
 	//TriggerBox->OnComponentEndOverlap.AddDynamic(this, &ACombatSpawner::TriggerBoxOnOverlapEnd);
+
+
+	ACreature* player = Cast<ACreature>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (player)
+	{
+		// insert player speciffic modifiers
+	}
+	
+	Difficulty += DifficultyBonus;
 
 	for (int32 i = 0; i < CreatureClasses.Num(); i++)
 	{

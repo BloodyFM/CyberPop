@@ -41,6 +41,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Spawning")
 	int32 PointsOnField{ 0 };
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawning")
+		int32 DifficultyBonus{ 0 };
+
 	
 	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Spawning")
 	//TArray<int> SpawnNumber;
