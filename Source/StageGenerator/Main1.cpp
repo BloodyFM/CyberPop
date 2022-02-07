@@ -131,7 +131,7 @@ void AMain1::Attack()
 	if (AnimInstance && CombatMontage)
 	{
 		AnimInstance->Montage_Play(CombatMontage, 1.35f);
-		AnimInstance->Montage_JumpToSection(("Attack_1"), CombatMontage);
+		AnimInstance->Montage_JumpToSection(("Attack"), CombatMontage);
 
 	}
 	
