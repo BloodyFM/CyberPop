@@ -34,6 +34,29 @@ void ACombatSpawner::BeginPlay()
 
 	for (int32 i = 0; i < CreatureClasses.Num(); i++)
 	{
+		CreatureClasses[i];
+		while (true)
+		{
+			if ((PointsOnField + CreatureClasses[i].GetDefaultObject()->points) > Difficulty)
+				break;
+
+			float Roll = FMath::RandRange(0.f, 100.f);
+			if (Roll > CreatureClasses[i].GetDefaultObject()->SpawnRate)
+				break;
+
+			PointsOnField += CreatureClasses[i].GetDefaultObject()->points;
+			FVector Extent = SpawnBox->GetScaledBoxExtent();
+			FVector Origin = SpawnBox->GetComponentLocation();
+
+			FVector Point = UKismetMathLibrary::RandomPointInBoundingBox(Origin, Extent);
+			FTransform SpawnTransform;
+			SpawnTransform.SetLocation(Point);
+			ACreature* SpawnedCreature = GetWorld()->SpawnActor<ACreature>(CreatureClasses[i], SpawnTransform);
+			SpawnedCreature->SpawnDefaultController();
+			SpawnedCreature->Master = this;
+			SavePointerToCreature(SpawnedCreature);
+		}
+		/**
 		int32 ammount = FMath::RandRange(2, 8);
 		for (int32 j = 0; j < ammount; j++)
 		{
@@ -48,6 +71,7 @@ void ACombatSpawner::BeginPlay()
 			SpawnedCreature->Master = this;
 			SavePointerToCreature(SpawnedCreature);
 		}
+		*/
 	}
 	
 }

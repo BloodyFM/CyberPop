@@ -35,6 +35,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawning")
 	TArray<TSubclassOf<class ACreature>> CreatureClasses;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawning")
+	int32 Difficulty{ 100 };
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Spawning")
+	int32 PointsOnField{ 0 };
+
 	
 	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Spawning")
 	//TArray<int> SpawnNumber;

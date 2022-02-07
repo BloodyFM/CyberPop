@@ -41,6 +41,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats)
 		int32 points { 1 };
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats)
+		float SpawnRate { 100.f };
+
 private:
 
 protected:
