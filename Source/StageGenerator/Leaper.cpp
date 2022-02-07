@@ -73,8 +73,11 @@ void ALeaper::Tick(float DeltaTime)
 		else
 		{
 			distance.Normalize();
-			FVector force = distance * 500.f;
-			SetActorLocation(GetActorLocation() + (force * DeltaTime));
+			distance.Z = 0.1f;
+			FVector force = distance * DashPower;
+			//SetActorLocation(GetActorLocation() + (force * DeltaTime), true);
+			GetCharacterMovement()->AddImpulse(force, true);
+			bIsDashing = false;
 		}
 	}
 

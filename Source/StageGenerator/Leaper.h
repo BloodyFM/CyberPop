@@ -93,6 +93,8 @@ public:
 	void Dash(class ACreature* Target);
 	bool bIsDashing { false };
 	FVector DashTargetLocation { 0.f };
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	float DashPower{ 500.f };
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
 	float DashTolerance{100.f};
 

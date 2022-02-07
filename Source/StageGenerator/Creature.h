@@ -38,6 +38,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats)
 		float hp;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats)
+		int32 points { 1 };
 
 private:
 
