@@ -32,6 +32,13 @@ public:
 
 	float getHp() { return hp; }
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Attack)
+	bool IFrameOn;
+
+	float InvulnTimer;
+
+	float InvulnDuration;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats)
 		float maxHp;

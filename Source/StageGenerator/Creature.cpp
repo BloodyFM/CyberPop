@@ -39,12 +39,23 @@ ACreature::ACreature()
 
 	bIsMainCharacter = false;
 
+	IFrameOn = false;
+
+	InvulnTimer = 0.f;
+	InvulnDuration = 0.f;
+
 }
 
 void ACreature::TakeDMG(float damage)
 {
-	hp -= damage;
-	UE_LOG(LogTemp, Warning, TEXT("Slap"));
+	if (IFrameOn != true && InvulnTimer >= InvulnDuration)
+	{
+		InvulnTimer = 0.f;
+		hp -= damage;
+		UE_LOG(LogTemp, Warning, TEXT("Slap"));
+	}
+	//hp -= damage;
+	//UE_LOG(LogTemp, Warning, TEXT("Slap"));
 }
 
 void ACreature::BeginPlay()
@@ -71,7 +82,7 @@ void ACreature::Tick(float DeltaTime)
 			Master->RemoveServant(this);
 		this->Destroy();
 	}
-
+	InvulnTimer += DeltaTime;
 }
 
 // Called to bind functionality to input

@@ -30,7 +30,7 @@ AMain1::AMain1()
 
 	DashCharge = DashChargeMax;
 
-	DrainRate = 5.f;
+	DrainRate = 2.f;
 
 	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
 	WeaponMesh->SetupAttachment(GetRootComponent());
@@ -45,6 +45,8 @@ AMain1::AMain1()
 	bAttack1Over = false;
 	bAttack2Over = false;
 	bAttack3Over = false;
+
+	InvulnDuration = 1.f;
 	
 
 }
@@ -110,7 +112,7 @@ void AMain1::RightMouseReleased()
 
 void AMain1::GiveHP()
 {
-	hp += 30.f;
+	hp += 50.f;
 
 	if (hp > maxHp)
 	{
@@ -166,6 +168,7 @@ void AMain1::Dash()
 {
 	if (bCanDash)
 	{
+		IFrameOn = true;
 		bDashing = true;
 		GetCharacterMovement()->RotationRate = FRotator(0.0f, 0.f, 0.0f);
 		SpeedBeforeDash = FVector(GetActorForwardVector().X, GetActorForwardVector().Y, 0.f) * MovementSpeedDash;
@@ -187,6 +190,7 @@ void AMain1::StopDashing()
 	GetCharacterMovement()->BrakingFrictionFactor = 2.f; // Sets friction back to default
 	GetCharacterMovement()->RotationRate = FRotator(0.0f, 540.f, 0.0f);
 	GetWorldTimerManager().SetTimer(DashHandle, this, &AMain1::ResetDash, DashCooldown, false); // Sets timer to Enable dash again
+	IFrameOn = false;
 }
 
 void AMain1::ResetDash()
