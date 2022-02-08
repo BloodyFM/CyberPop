@@ -67,6 +67,7 @@ void AMain1::BeginPlay()
 	WeaponTransform.SetScale3D(FVector(1.f));
 	EquippedWeapon = GetWorld()->SpawnActor<AWeapon>(WeaponClass, FTransform(GetActorLocation()));
 	EquippedWeapon->Equip(this);
+	SetEquippedWeapon(nullptr);
 }
 
 
