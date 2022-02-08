@@ -81,9 +81,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float DrainRate;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Items")
+		class AItem* ActiveOverlappingItem;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Items")
 		class AWeapon* EquippedWeapon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+		TSubclassOf<class AWeapon> WeaponClass;
 
 	FORCEINLINE void SetEquippedWeapon(AWeapon* WeaponToSet) { EquippedWeapon = WeaponToSet; }
 

@@ -60,6 +60,13 @@ void AMain1::BeginPlay()
 	FString LevelName = GetWorld()->GetMapName();
 	LevelName.RemoveFromStart(GetWorld()->StreamingLevelsPrefix);
 	//UE_LOG(LogTemp, Warning, TEXT("%s"), *LevelName);
+
+	FTransform WeaponTransform;
+	WeaponTransform.SetLocation(GetActorLocation());
+	WeaponTransform.SetRotation(FRotator(0.f).Quaternion());
+	WeaponTransform.SetScale3D(FVector(1.f));
+	EquippedWeapon = GetWorld()->SpawnActor<AWeapon>(WeaponClass, FTransform(GetActorLocation()));
+	EquippedWeapon->Equip(this);
 }
 
 
