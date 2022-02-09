@@ -62,9 +62,12 @@ void ACombatSpawner::BeginPlay()
 			FTransform SpawnTransform;
 			SpawnTransform.SetLocation(Point);
 			ACreature* SpawnedCreature = GetWorld()->SpawnActor<ACreature>(CreatureClasses[i], SpawnTransform);
-			SpawnedCreature->SpawnDefaultController();
-			SpawnedCreature->Master = this;
-			SavePointerToCreature(SpawnedCreature);
+			if (SpawnedCreature)
+			{
+				SpawnedCreature->SpawnDefaultController();
+				SpawnedCreature->Master = this;
+				SavePointerToCreature(SpawnedCreature);
+			}
 		}
 		/**
 		int32 ammount = FMath::RandRange(2, 8);

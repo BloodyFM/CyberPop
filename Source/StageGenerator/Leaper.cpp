@@ -5,6 +5,7 @@
 #include "Components/SphereComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/SceneComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "AIController.h"
 #include "AIModule.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -16,26 +17,27 @@ ALeaper::ALeaper()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	AggroSphere = CreateDefaultSubobject<USphereComponent>(TEXT("AggroSphere"));
-	AggroSphere->SetupAttachment(GetRootComponent());
-	AggroSphere->InitSphereRadius(600.f);
+	//AggroSphere = CreateDefaultSubobject<USphereComponent>(TEXT("AggroSphere"));
+	//AggroSphere->SetupAttachment(GetRootComponent());
+	//AggroSphere->InitSphereRadius(600.f);
 
-	CombatSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CombatSphere"));
-	CombatSphere->SetupAttachment(GetRootComponent());
-	CombatSphere->InitSphereRadius(75.f);
+	//CombatSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CombatSphere"));
+	//CombatSphere->SetupAttachment(GetRootComponent());
+	//CombatSphere->InitSphereRadius(75.f);
 
 	DashSphere = CreateDefaultSubobject<USphereComponent>(TEXT("DashSphere"));
 	DashSphere->SetupAttachment(GetRootComponent());
 	DashSphere->InitSphereRadius(100.f);
 
-	AttackBox = CreateDefaultSubobject<UBoxComponent>(TEXT("AttackBox"));
-	AttackBox->SetupAttachment(GetRootComponent());
+	AttackBoxL = CreateDefaultSubobject<UBoxComponent>(TEXT("AttackBoxL"));
+	AttackBoxL->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("LeftClawSocket"));
+	AttackBoxR = CreateDefaultSubobject<UBoxComponent>(TEXT("AttackBoxR"));
+	AttackBoxR->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("RightClawSocket"));
 
-	bOverlappingCombatSphere = false;
-	MainInHitRange = false;
+	bOverlappingDashSphere = false;
 
 	Damage = 50.f;
-	MovementSpeed = 450.f;
+	MovementSpeed = 400.f;
 	TurnRate = 250.f;
 
 }
@@ -46,16 +48,26 @@ void ALeaper::BeginPlay()
 
 	AIController = Cast<AAIController>(GetController());
 
-	AggroSphere->OnComponentBeginOverlap.AddDynamic(this, &ALeaper::AggroSphereOnOverlapBegin);
-	AggroSphere->OnComponentEndOverlap.AddDynamic(this, &ALeaper::AggroSphereOnOverlapEnd);
+	//AggroSphere->OnComponentBeginOverlap.AddDynamic(this, &ALeaper::AggroSphereOnOverlapBegin);
+	//AggroSphere->OnComponentEndOverlap.AddDynamic(this, &ALeaper::AggroSphereOnOverlapEnd);
 
-	CombatSphere->OnComponentBeginOverlap.AddDynamic(this, &ALeaper::CombatSphereOnOverlapBegin);
-	CombatSphere->OnComponentEndOverlap.AddDynamic(this, &ALeaper::CombatSphereOnOverlapEnd);
+	//CombatSphere->OnComponentBeginOverlap.AddDynamic(this, &ALeaper::CombatSphereOnOverlapBegin);
+	//CombatSphere->OnComponentEndOverlap.AddDynamic(this, &ALeaper::CombatSphereOnOverlapEnd);
 
 	DashSphere->OnComponentBeginOverlap.AddDynamic(this, &ALeaper::DashSphereOnOverlapBegin);
+	DashSphere->OnComponentEndOverlap.AddDynamic(this, &ALeaper::DashSphereOnOverlapEnd);
 
-	AttackBox->OnComponentBeginOverlap.AddDynamic(this, &ALeaper::AttackBoxOnOverlapBegin);
-	AttackBox->OnComponentEndOverlap.AddDynamic(this, &ALeaper::AttackBoxOnOverlapEnd);
+	AttackBoxL->OnComponentBeginOverlap.AddDynamic(this, &ALeaper::AttackBoxOnOverlapBegin);
+	AttackBoxR->OnComponentBeginOverlap.AddDynamic(this, &ALeaper::AttackBoxOnOverlapBegin);
+
+	AttackBoxL->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	AttackBoxL->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+	AttackBoxL->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	AttackBoxL->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+	AttackBoxR->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	AttackBoxR->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+	AttackBoxR->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	AttackBoxR->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 
 }
 
@@ -63,25 +75,7 @@ void ALeaper::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (bIsDashing)
-	{
-		FVector distance = DashTargetLocation - GetActorLocation();
-		if (distance.Size() <= DashTolerance)
-		{
-			bIsDashing = false;
-		}
-		else
-		{
-			distance.Normalize();
-			distance.Z = 0.1f;
-			FVector force = distance * DashPower;
-			//SetActorLocation(GetActorLocation() + (force * DeltaTime), true);
-			GetCharacterMovement()->AddImpulse(force, true);
-			bIsDashing = false;
-		}
-	}
-
-	if (bOverlappingCombatSphere && CombatTarget)
+	if (CombatTarget && bInterp)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("spin"));
 		FRotator LookAtYaw = GetLookAtRotationYaw(CombatTarget->GetActorLocation());
@@ -104,6 +98,7 @@ void ALeaper::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 }
 
+/**
 void ALeaper::AggroSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor)
@@ -121,7 +116,9 @@ void ALeaper::AggroSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, 
 {
 
 }
+*/
 
+/**
 void ALeaper::CombatSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor)
@@ -160,6 +157,7 @@ void ALeaper::CombatSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent,
 		}
 	}
 }
+*/
 
 void ALeaper::DashSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
@@ -171,8 +169,26 @@ void ALeaper::DashSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent,
 			if (Main->bIsMainCharacter)
 			{
 				CombatTarget = Main;
-				SetLeaperMovementStatus(ELeaperMovementStatus::EMS_Attacking);
-				Dash(CombatTarget);
+				bInDashSphere = true;
+				if (!bIsDashing)
+				{
+					SetLeaperMovementStatus(ELeaperMovementStatus::EMS_Attacking);
+					PrepareDash(CombatTarget);
+				}
+			}
+		}
+	}
+}
+void ALeaper::DashSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (OtherActor)
+	{
+		ACreature* Main = Cast<ACreature>(OtherActor);
+		if (Main)
+		{
+			if (Main->bIsMainCharacter)
+			{
+				bInDashSphere = false;
 			}
 		}
 	}
@@ -206,12 +222,25 @@ void ALeaper::MoveToTarget(class ACreature* Target)
 	}
 }
 
-void ALeaper::Dash(class ACreature* Target)
+void ALeaper::PrepareDash(class ACreature* Target)
 {
 	bIsDashing = true;
 	DashTargetLocation = Target->GetActorLocation();
 	AIController->StopMovement();
+	bInterp = true;
 }
+
+void ALeaper::Dash()
+{
+	bInterp = false;
+	FVector distance = DashTargetLocation - GetActorLocation();
+	distance.Normalize();
+	distance.Z = 0.1f;
+	FVector force = distance * DashPower;
+	//SetActorLocation(GetActorLocation() + (force * DeltaTime), true);
+	GetCharacterMovement()->AddImpulse(force, true);
+}
+
 
 void ALeaper::AttackBoxOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
@@ -221,37 +250,19 @@ void ALeaper::AttackBoxOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 		if (Main)
 		{
 			if (Main->bIsMainCharacter)
-				MainInHitRange = true;
+				HitPlayer();
 
 			UE_LOG(LogTemp, Warning, TEXT("AttackBoxOnOverlapBegin()"));
 		}
 	}
 }
 
-void ALeaper::AttackBoxOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	if (OtherActor)
-	{
-		ACreature* Main = Cast<ACreature>(OtherActor);
-		if (Main)
-		{
-			if (Main->bIsMainCharacter)
-				MainInHitRange = false;
-
-			UE_LOG(LogTemp, Warning, TEXT("AttackBoxOnOverlapEnd()"));
-		}
-	}
-}
-
 void ALeaper::HitPlayer()
 {
-	if (MainInHitRange)
+	// cast TakeDMG function on player
+	if (CombatTarget)
 	{
-		// cast TakeDMG function on player
-		if (CombatTarget)
-		{
-			CombatTarget->TakeDMG(Damage);
-		}
+		CombatTarget->TakeDMG(Damage);
 	}
 	UE_LOG(LogTemp, Warning, TEXT("HitPlayer()"));
 }
@@ -260,4 +271,16 @@ void ALeaper::Aggro(ACreature* target)
 {
 	AIController = Cast<AAIController>(GetController());
 	MoveToTarget(target);
+}
+
+void ALeaper::ActivateCollision()
+{
+	AttackBoxL->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	AttackBoxR->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+}
+
+void ALeaper::DeactivateCollision()
+{
+	AttackBoxL->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	AttackBoxR->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
