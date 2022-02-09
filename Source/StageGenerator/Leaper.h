@@ -60,7 +60,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats)
 	float Damage;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
 		bool bInterp{ false };
 
 protected:

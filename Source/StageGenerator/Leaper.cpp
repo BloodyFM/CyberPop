@@ -227,12 +227,11 @@ void ALeaper::PrepareDash(class ACreature* Target)
 	bIsDashing = true;
 	DashTargetLocation = Target->GetActorLocation();
 	AIController->StopMovement();
-	bInterp = true;
+	bInterp = false;
 }
 
 void ALeaper::Dash()
 {
-	bInterp = false;
 	FVector distance = DashTargetLocation - GetActorLocation();
 	distance.Normalize();
 	distance.Z = 0.1f;
