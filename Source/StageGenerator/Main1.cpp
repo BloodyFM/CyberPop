@@ -48,6 +48,7 @@ AMain1::AMain1()
 	bAttack3Over = false;
 
 	InvulnDuration = 1.f;
+
 	
 
 }
@@ -69,6 +70,7 @@ void AMain1::BeginPlay()
 	EquippedWeapon = GetWorld()->SpawnActor<AWeapon>(WeaponClass, FTransform(GetActorLocation()));
 	EquippedWeapon->Equip(this);
 	SetEquippedWeapon(EquippedWeapon);
+
 }
 
 
@@ -124,6 +126,7 @@ void AMain1::SpecialPressed()
 	bSpecialPressed = true;
 	if (EquippedWeapon && bCanAttack)
 	{
+		GetCharacterMovement()->MaxWalkSpeed = 0.f;
 		SpecialAttack();
 		bCanAttack = false;
 	}
@@ -197,9 +200,8 @@ void AMain1::SpecialAttack()
 
 	if (AnimInstance && CombatMontage)
 	{
-		//MovementSpeedDash = 0.f;
-		//AnimInstance->Montage_Play(CombatMontage, 1.35f);
-		//AnimInstance->Montage_JumpToSection(("Attack3"), CombatMontage);
+		AnimInstance->Montage_Play(CombatMontage, 1.f);
+		AnimInstance->Montage_JumpToSection(("SpecialAttack"), CombatMontage);
 
 	}
 }
