@@ -79,7 +79,9 @@ void ACreature::Tick(float DeltaTime)
 	{
 		//Creature dies
 		if (Master)
+		{
 			Master->RemoveServant(this);
+		}
 		this->Destroy();
 	}
 	InvulnTimer += DeltaTime;

@@ -33,7 +33,7 @@ public:
 		float Damage;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Main")
-	AMain1* user{ nullptr };
+	class AMain1* user{ nullptr };
 
 	// The hitbox of the attack
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Attack")

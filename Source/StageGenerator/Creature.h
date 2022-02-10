@@ -91,4 +91,7 @@ public:
 
 	class ACombatSpawner* Master{ nullptr };
 
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Main")
+		class AMain1* user{ nullptr };*/
+
 };
