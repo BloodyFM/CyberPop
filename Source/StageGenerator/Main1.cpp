@@ -164,7 +164,7 @@ void AMain1::Attack()
 	{
 		if (bNotAttacked || bAttack3Over)
 		{
-			AnimInstance->Montage_Play(CombatMontage, 2.f);
+			AnimInstance->Montage_Play(CombatMontage, 1.f);
 			AnimInstance->Montage_JumpToSection(("Attack3"), CombatMontage);
 			bNotAttacked = false;
 			bAttack1Over = true;
@@ -172,14 +172,14 @@ void AMain1::Attack()
 		}
 		else if (bAttack1Over)
 		{
-			AnimInstance->Montage_Play(CombatMontage, 2.f);
+			AnimInstance->Montage_Play(CombatMontage, 1.f);
 			AnimInstance->Montage_JumpToSection(("Attack2"), CombatMontage);
 			bAttack2Over = true;
 			bAttack1Over = false;
 		}
 		else if (bAttack2Over)
 		{
-			AnimInstance->Montage_Play(CombatMontage, 0.9f);
+			AnimInstance->Montage_Play(CombatMontage, 1.f);
 			AnimInstance->Montage_JumpToSection(("Attack"), CombatMontage);
 			bAttack3Over = true;
 			bAttack2Over = false;
