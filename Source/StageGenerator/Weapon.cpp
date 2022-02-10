@@ -40,6 +40,9 @@ void AWeapon::BeginPlay()
 	CombatCollision->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
 	CombatCollision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	CombatCollision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+
+
+	user = Cast<AMain1>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 }
 
 void AWeapon::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -48,9 +51,9 @@ void AWeapon::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* O
 	Super::OnOverlapBegin(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
 	if (OtherActor->IsA(AMain1::StaticClass()))
 	{
-		AMain1* Main1 = Cast<AMain1>(OtherActor);
+		/*AMain1* Main1 = Cast<AMain1>(OtherActor);
 		Equip(Main1);
-		user = Main1;
+		user = Main1;*/
 	}
 }
 
@@ -88,8 +91,11 @@ void AWeapon::AttackBoxOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 		{
 			if (Enemy->getHp() - Damage <= 0.f)
 			{
-				//user->GiveHP();
-				//user->GiveDash();
+				if (user)
+				{
+				user->GiveHP();
+				user->GiveDash();
+				}
 			}
 			Enemy->TakeDMG(Damage);
 		}
