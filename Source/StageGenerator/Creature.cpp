@@ -103,6 +103,9 @@ void ACreature::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 		PlayerInputComponent->BindAction("RightMouseAction", IE_Pressed, this, &ACreature::RightMousePressed);
 		PlayerInputComponent->BindAction("RightMouseAction", IE_Released, this, &ACreature::RightMouseReleased);
 
+		PlayerInputComponent->BindAction("SpecialAction", IE_Pressed, this, &ACreature::SpecialPressed);
+		PlayerInputComponent->BindAction("SpecialAction", IE_Released, this, &ACreature::SpecialReleased);
+
 		PlayerInputComponent->BindAxis("MoveForward", this, &ACreature::MoveForward);
 		PlayerInputComponent->BindAxis("MoveRight", this, &ACreature::MoveRight);
 	}
@@ -149,6 +152,15 @@ void ACreature::RightMousePressed()
 
 void ACreature::RightMouseReleased()
 {
+}
+
+void ACreature::SpecialPressed()
+{
+
+}
+void ACreature::SpecialReleased()
+{
+
 }
 
 void ACreature::Aggro(ACreature* target)
