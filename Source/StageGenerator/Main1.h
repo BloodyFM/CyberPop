@@ -24,8 +24,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Movement)
 		float MovementSpeedDash;
 
+	//Attack functions
 	UFUNCTION()
 		void Attack();
+	UFUNCTION()
+		void SpecialAttack();
 
 	// Dash functions
 	UFUNCTION()
@@ -75,8 +78,13 @@ public:
 	virtual void RightMousePressed() override;
 	virtual void RightMouseReleased() override;
 
+	//Special Action on E
+	virtual void SpecialPressed() override;
+	virtual void SpecialReleased() override;
+
 	bool bLeftMousePressed;
 	bool bRightMousePressed;
+	bool bSpecialPressed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float DrainRate;

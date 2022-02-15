@@ -17,6 +17,7 @@ AMain1::AMain1()
 {
 	bLeftMousePressed = false;
 	bRightMousePressed = false;
+	bSpecialPressed = false;
 
 	MovementSpeedDash = 600.f;
 	DashDistance = 5000.f;
@@ -47,6 +48,7 @@ AMain1::AMain1()
 	bAttack3Over = false;
 
 	InvulnDuration = 1.f;
+
 	
 
 }
@@ -67,7 +69,8 @@ void AMain1::BeginPlay()
 	WeaponTransform.SetScale3D(FVector(1.f));
 	EquippedWeapon = GetWorld()->SpawnActor<AWeapon>(WeaponClass, FTransform(GetActorLocation()));
 	EquippedWeapon->Equip(this);
-	SetEquippedWeapon(nullptr);
+	//SetEquippedWeapon(nullptr);
+
 }
 
 
@@ -118,6 +121,23 @@ void AMain1::RightMouseReleased()
 	bRightMousePressed = false;
 }
 
+void AMain1::SpecialPressed()
+{
+	bSpecialPressed = true;
+	if (EquippedWeapon && bCanAttack)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = 0.f;
+		SpecialAttack();
+		bCanAttack = false;
+	}
+
+}
+
+void AMain1::SpecialReleased()
+{
+	bSpecialPressed = false;
+}
+
 void AMain1::GiveHP()
 {
 	hp += 50.f;
@@ -147,29 +167,43 @@ void AMain1::Attack()
 	{
 		if (bNotAttacked || bAttack3Over)
 		{
-			AnimInstance->Montage_Play(CombatMontage, 1.35f);
-			AnimInstance->Montage_JumpToSection(("Attack"), CombatMontage);
+			AnimInstance->Montage_Play(CombatMontage, 1.f);
+			AnimInstance->Montage_JumpToSection(("Attack3"), CombatMontage);
 			bNotAttacked = false;
 			bAttack1Over = true;
 			bAttack3Over = false;
 		}
 		else if (bAttack1Over)
 		{
-			AnimInstance->Montage_Play(CombatMontage, 1.35f);
+			AnimInstance->Montage_Play(CombatMontage, 1.f);
 			AnimInstance->Montage_JumpToSection(("Attack2"), CombatMontage);
 			bAttack2Over = true;
 			bAttack1Over = false;
 		}
 		else if (bAttack2Over)
 		{
-			AnimInstance->Montage_Play(CombatMontage, 1.35f);
-			AnimInstance->Montage_JumpToSection(("Attack3"), CombatMontage);
+			AnimInstance->Montage_Play(CombatMontage, 1.f);
+			AnimInstance->Montage_JumpToSection(("Attack"), CombatMontage);
 			bAttack3Over = true;
 			bAttack2Over = false;
 		}
 
 	}
 	
+}
+
+void AMain1::SpecialAttack()
+{
+	bAttacking = true;
+
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+
+	if (AnimInstance && CombatMontage)
+	{
+		AnimInstance->Montage_Play(CombatMontage, 1.f);
+		AnimInstance->Montage_JumpToSection(("SpecialAttack"), CombatMontage);
+
+	}
 }
 
 void AMain1::Dash()

@@ -78,6 +78,10 @@ public:
 	virtual void RightMousePressed();
 	virtual void RightMouseReleased();
 
+	//Special Action on E button
+	virtual void SpecialPressed();
+	virtual void SpecialReleased();
+
 	virtual void Aggro(class ACreature* target);
 
 	bool bLeftMousePressed;
@@ -86,5 +90,8 @@ public:
 	bool bIsMainCharacter;
 
 	class ACombatSpawner* Master{ nullptr };
+
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Main")
+		class AMain1* user{ nullptr };*/
 
 };

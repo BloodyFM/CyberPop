@@ -3,6 +3,9 @@
 
 #include "Weapon.h"
 #include "Main1.h"
+#include "Creature.h"
+#include "Leaper.h"
+#include "Grunt.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "Engine/StaticMeshSocket.h"
@@ -37,30 +40,20 @@ void AWeapon::BeginPlay()
 	CombatCollision->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
 	CombatCollision->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	CombatCollision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+
+
+	user = Cast<AMain1>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 }
 
 void AWeapon::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	Super::OnOverlapBegin(OverlappedComponent, OtherActor, OtherComp, OtherBodyIndex, bFromSweep, SweepResult);
-	if (OtherActor)
+	if (OtherActor->IsA(AMain1::StaticClass()))
 	{
-		AMain1* Main1 = Cast<AMain1>(OtherActor);
-		if (Main1)
-		{
-			Equip(Main1);
-			user = Main1;
-		}
-		/*ACreature* Enemy = Cast<ACreature>(OtherActor);
-		if (Enemy)
-		{
-			Enemy->TakeDMG(Damage);
-			if (Enemy->getHp() <= 0.f)
-			{
-				//user->giveStack()
-				//user->giveHp()
-			}
-		}*/
+		/*AMain1* Main1 = Cast<AMain1>(OtherActor);
+		Equip(Main1);
+		user = Main1;*/
 	}
 }
 
@@ -90,18 +83,23 @@ void AWeapon::Equip(AMain1* Char)
 
 void AWeapon::AttackBoxOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	ACreature* Enemy = Cast<ACreature>(OtherActor);
-	if (Enemy && !Enemy->bIsMainCharacter)
+	//if (OtherActor->IsA(ACreature::StaticClass()))
+	if(OtherActor->IsA(ALeaper::StaticClass()) || OtherActor->IsA(AGrunt::StaticClass()))
 	{
-		Enemy->TakeDMG(Damage);
-		if (Enemy->getHp() <= 0.f)
+		ACreature* Enemy = Cast<ACreature>(OtherActor);
+		if (!Enemy->bIsMainCharacter)
 		{
-			//user->giveStack();
-			user->GiveHP();
-			user->GiveDash();
+			if (Enemy->getHp() - Damage <= 0.f)
+			{
+				if (user)
+				{
+				user->GiveHP();
+				user->GiveDash();
+				}
+			}
+			Enemy->TakeDMG(Damage);
 		}
 	}
-
 
 }
 
