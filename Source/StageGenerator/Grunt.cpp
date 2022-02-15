@@ -14,9 +14,9 @@ AGrunt::AGrunt()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	AggroSphere = CreateDefaultSubobject<USphereComponent>(TEXT("AggroSphere"));
-	AggroSphere->SetupAttachment(GetRootComponent());
-	AggroSphere->InitSphereRadius(600.f);
+	RetreatSphere = CreateDefaultSubobject<USphereComponent>(TEXT("AggroSphere"));
+	RetreatSphere->SetupAttachment(GetRootComponent());
+	RetreatSphere->InitSphereRadius(600.f);
 
 	Ammo = MaxAmmo;
 }
@@ -27,8 +27,8 @@ void AGrunt::BeginPlay()
 
 	AIController = Cast<AAIController>(GetController());
 
-	AggroSphere->OnComponentBeginOverlap.AddDynamic(this, &AGrunt::AggroSphereOnOverlapBegin);
-	AggroSphere->OnComponentEndOverlap.AddDynamic(this, &AGrunt::AggroSphereOnOverlapEnd);
+	RetreatSphere->OnComponentBeginOverlap.AddDynamic(this, &AGrunt::RetreatSphereOnOverlapBegin);
+	RetreatSphere->OnComponentEndOverlap.AddDynamic(this, &AGrunt::RetreatSphereOnOverlapEnd);
 
 }
 
@@ -44,6 +44,7 @@ void AGrunt::Tick(float DeltaTime)
 		SetActorRotation(InterpRotation);
 	}
 
+	/**
 	if (GruntMovementStatus == EGruntMovementStatus::EMS_Attacking)
 	{
 		if (timeSinceLastShot >= shootingDelayFocused)
@@ -132,6 +133,7 @@ void AGrunt::Tick(float DeltaTime)
 			bInterpToTarget = true;
 		}
 	}
+	*/
 }
 
 FRotator AGrunt::GetLookAtRotationYaw(FVector Target)
@@ -141,13 +143,54 @@ FRotator AGrunt::GetLookAtRotationYaw(FVector Target)
 	return YawLookAtRotation;
 }
 
+void AGrunt::ShootFocused()
+{
+	FRotator Rotation = GetActorRotation();
+	Rotation.Yaw += FMath::RandRange(-inaccuracy, inaccuracy);
+
+	FTransform BulletTransform;
+	BulletTransform.SetLocation(GetActorLocation() + (GetActorForwardVector() * 10.f) + FVector(0.f, 0.f, 100.f));
+	BulletTransform.SetRotation(Rotation.Quaternion());
+	BulletTransform.SetScale3D(FVector(1.f));
+
+	GetWorld()->SpawnActor<ABullet>(BulletClass, BulletTransform);
+	Ammo -= 1;
+}
+
+void AGrunt::ShootSpread()
+{
+	FRotator Rotation = GetActorRotation();
+	Rotation.Yaw -= 10.f;
+
+	FTransform BulletTransform;
+	BulletTransform.SetLocation(GetActorLocation() + (GetActorForwardVector() * 10.f) + FVector(0.f, 0.f, 100.f));
+	BulletTransform.SetRotation(Rotation.Quaternion());
+	BulletTransform.SetScale3D(FVector(1.f));
+
+	GetWorld()->SpawnActor<ABullet>(BulletClass, BulletTransform);
+	Rotation.Yaw += 5.f;
+	BulletTransform.SetRotation(Rotation.Quaternion());
+	GetWorld()->SpawnActor<ABullet>(BulletClass, BulletTransform);
+	Rotation.Yaw += 5.f;
+	BulletTransform.SetRotation(Rotation.Quaternion());
+	GetWorld()->SpawnActor<ABullet>(BulletClass, BulletTransform);
+	Rotation.Yaw += 5.f;
+	BulletTransform.SetRotation(Rotation.Quaternion());
+	GetWorld()->SpawnActor<ABullet>(BulletClass, BulletTransform);
+	Rotation.Yaw += 5.f;
+	BulletTransform.SetRotation(Rotation.Quaternion());
+	GetWorld()->SpawnActor<ABullet>(BulletClass, BulletTransform);
+
+	Ammo -= 5;
+}
+
 void AGrunt::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
 
-void AGrunt::AggroSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AGrunt::RetreatSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor)
 	{
@@ -156,16 +199,13 @@ void AGrunt::AggroSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent,
 		{
 			if (Main->bIsMainCharacter)
 			{
-				bInterpToTarget = true;
 				bEnemyToClose = true;
-				CombatTarget = Main;
-				SetGruntMovementStatus(EGruntMovementStatus::EMS_Retreat);
 			}
 		}
 	}
 }
 
-void AGrunt::AggroSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+void AGrunt::RetreatSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 	//UE_LOG(LogTemp, Warning, TEXT("Focus"));
 	if (OtherActor)
@@ -176,10 +216,6 @@ void AGrunt::AggroSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, A
 			if (Main->bIsMainCharacter)
 			{
 				bEnemyToClose = false;
-				if (GruntMovementStatus != EGruntMovementStatus::EMS_Reload)
-				{
-					SetGruntMovementStatus(EGruntMovementStatus::EMS_Attacking);
-				}
 			}
 		}
 	}
@@ -190,12 +226,4 @@ void AGrunt::Aggro(ACreature* target)
 	AIController = Cast<AAIController>(GetController());
 	CombatTarget = target;
 	bInterpToTarget = true;
-	if (bEnemyToClose)
-	{
-		SetGruntMovementStatus(EGruntMovementStatus::EMS_Retreat);
-	}
-	else
-	{
-		SetGruntMovementStatus(EGruntMovementStatus::EMS_Attacking);
-	}
 }

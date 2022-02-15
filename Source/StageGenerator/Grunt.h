@@ -13,6 +13,7 @@ enum class EGruntMovementStatus :uint8
 	EMS_Idle			UMETA(DisplayName = "Idle"),
 	EMS_Retreat			UMETA(DisplayName = "Retreat"),
 	EMS_Attacking		UMETA(DisplayName = "Attacking"),
+	EMS_Flank			UMETA(DisplayName = "Flank"),
 	EMS_Reload			UMETA(DisplayName = "Reload"),
 
 	EMS_MAX				UMETA(DisplayName = "DefaultMAX")
@@ -34,7 +35,7 @@ public:
 
 	// Sphere that will aggro the ai if the player overlaps
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
-	class USphereComponent* AggroSphere;
+	class USphereComponent* RetreatSphere;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 	class AAIController* AIController;
@@ -50,7 +51,10 @@ public:
 	// Combat values
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	int32 MaxAmmo = 15;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
 	int32 Ammo;
+	UFUNCTION(BlueprintCallable)
+	void Reload() { Ammo = MaxAmmo; }
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	float shootingDelayFocused{ 0.1f };
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
@@ -60,6 +64,7 @@ public:
 	float ReloadDelay{ 3.f }; // temporary untill I get animation
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	float inaccuracy{ 10.f };
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 	bool bEnemyToClose{ false };
 
 
@@ -78,13 +83,19 @@ public:
 	UFUNCTION()
 		FRotator GetLookAtRotationYaw(FVector Target);
 
+	UFUNCTION(BlueprintCallable)
+		void ShootFocused();
+	UFUNCTION(BlueprintCallable)
+		void ShootSpread();
+
+
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION()
-		virtual void AggroSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+		virtual void RetreatSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION()
-		virtual void AggroSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+		virtual void RetreatSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
 	ACreature* CombatTarget { nullptr };
