@@ -98,12 +98,21 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 		TSubclassOf<class AWeapon> WeaponClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+		TSubclassOf<class ASwordSlice> SwordSliceClass;
+
 	FORCEINLINE void SetEquippedWeapon(AWeapon* WeaponToSet) { EquippedWeapon = WeaponToSet; }
 
 	void Equip();
 
 	UPROPERTY(VisibleAnywhere,  BlueprintReadOnly, Category = "Anims")
 	bool bAttacking;
+
+	UFUNCTION(BlueprintCallable)
+		void SwordSlice();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Attack")
+		bool bSendOutSwordSlice;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Anims")
 	class UAnimMontage* CombatMontage;

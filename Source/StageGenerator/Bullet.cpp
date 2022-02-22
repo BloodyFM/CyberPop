@@ -57,7 +57,8 @@ void ABullet::Tick(float DeltaTime)
 	SetActorLocation(GetActorLocation() + (ForwardVector * DeltaTime * MovementSpeed), true);
 }
 
-void ABullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void ABullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, 
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor)
 	{
@@ -89,6 +90,12 @@ void ABullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* O
 			}
 		}
 	}
+}
+
+void ABullet::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+
 }
 
 void ABullet::OverlapUtility()

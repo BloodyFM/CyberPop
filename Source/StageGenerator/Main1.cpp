@@ -4,6 +4,7 @@
 #include "Main1.h"
 #include "Creature.h"
 #include "Weapon.h"
+#include "SwordSlice.h"
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -46,6 +47,8 @@ AMain1::AMain1()
 	bAttack1Over = false;
 	bAttack2Over = false;
 	bAttack3Over = false;
+
+	bSendOutSwordSlice = false;
 
 	InvulnDuration = 1.f;
 
@@ -203,7 +206,26 @@ void AMain1::SpecialAttack()
 		AnimInstance->Montage_Play(CombatMontage, 1.f);
 		AnimInstance->Montage_JumpToSection(("SpecialAttack"), CombatMontage);
 
+		bSendOutSwordSlice = true;
+
 	}
+}
+
+void AMain1::SwordSlice()
+{
+	if (bSendOutSwordSlice)
+	{
+
+		FRotator Rotation = GetActorRotation();
+		FTransform SwordSliceTransform;
+		SwordSliceTransform.SetLocation(GetActorLocation() + (GetActorForwardVector() * 10.f) + FVector(0.f, 0.f, 100.f));
+		SwordSliceTransform.SetRotation(Rotation.Quaternion());
+		SwordSliceTransform.SetScale3D(FVector(1.f));
+
+		GetWorld()->SpawnActor<ASwordSlice>(SwordSliceClass, SwordSliceTransform);
+	}
+
+	bSendOutSwordSlice = false;
 }
 
 void AMain1::Dash()
