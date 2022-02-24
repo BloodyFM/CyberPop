@@ -146,7 +146,7 @@ FRotator AGrunt::GetLookAtRotationYaw(FVector Target)
 void AGrunt::ShootFocused()
 {
 	FRotator Rotation = GetActorRotation();
-	Rotation.Yaw += FMath::RandRange(-inaccuracy, inaccuracy);
+	//Rotation.Yaw += FMath::RandRange(-inaccuracy, inaccuracy);
 
 	FTransform BulletTransform;
 	BulletTransform.SetLocation(GetActorLocation() + (GetActorForwardVector() * 10.f) + FVector(0.f, 0.f, 100.f));
