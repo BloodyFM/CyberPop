@@ -62,8 +62,19 @@ void ACreature::ApplyStunn(float duration)
 {
 	if (StunTime < duration)
 	{
+		bStunned = true;
+	}
+	else
+	{
+		bStunned = false;
+		StunTime = 0.f;
+
+	}
+	if (bStunned)
+	{
 		StunTime = duration;
 	}
+
 }
 
 void ACreature::BeginPlay()

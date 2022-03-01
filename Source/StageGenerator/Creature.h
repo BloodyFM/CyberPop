@@ -54,6 +54,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = State)
 		float StunTime{ 0.f };
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = State)
+		bool bStunned{ false };
 
 private:
 

@@ -83,6 +83,27 @@ void ALeaper::Tick(float DeltaTime)
 
 		SetActorRotation(InterpRotation);
 	}
+	if (bStunned && LeaperMovementStatus != ELeaperMovementStatus::EMS_Stun)
+	{
+		SetLeaperMovementStatus(ELeaperMovementStatus::EMS_Stun);
+		DeactivateCollision();
+		bInterp = false;
+	}
+	else if (!bStunned && LeaperMovementStatus == ELeaperMovementStatus::EMS_Stun)
+	{
+		if (bInDashSphere)
+		{
+			SetLeaperMovementStatus(ELeaperMovementStatus::EMS_Attacking);
+			PrepareDash(CombatTarget);
+			bInterp = true;
+		}
+		else
+		{
+			MoveToTarget(CombatTarget);
+			bInterp = true;
+		}
+	}
+
 }
 
 FRotator ALeaper::GetLookAtRotationYaw(FVector Target)
@@ -170,7 +191,7 @@ void ALeaper::DashSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent,
 			{
 				CombatTarget = Main;
 				bInDashSphere = true;
-				if (!bIsDashing)
+				if (!bIsDashing && StunTime <= 0.f)
 				{
 					SetLeaperMovementStatus(ELeaperMovementStatus::EMS_Attacking);
 					PrepareDash(CombatTarget);

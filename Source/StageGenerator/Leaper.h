@@ -13,6 +13,7 @@ enum class ELeaperMovementStatus :uint8
 	EMS_Idle			UMETA(DisplayName = "Idle"),
 	EMS_MoveToTarget	UMETA(DisplayName = "MoveToTarget"),
 	EMS_Attacking		UMETA(DisplayName = "Attacking"),
+	EMS_Stun			UMETA(DisplayName = "Stun"),
 
 	EMS_MAX				UMETA(DisplayName = "DefaultMAX")
 };
