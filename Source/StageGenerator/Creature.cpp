@@ -58,6 +58,14 @@ void ACreature::TakeDMG(float damage)
 	//UE_LOG(LogTemp, Warning, TEXT("Slap"));
 }
 
+void ACreature::ApplyStunn(float duration)
+{
+	if (StunTime < duration)
+	{
+		StunTime = duration;
+	}
+}
+
 void ACreature::BeginPlay()
 {
 	Super::BeginPlay();
@@ -84,7 +92,14 @@ void ACreature::Tick(float DeltaTime)
 		}
 		this->Destroy();
 	}
-	InvulnTimer += DeltaTime;
+	if (StunTime > 0)
+	{
+		StunTime -= DeltaTime;
+	}
+	if (InvulnTimer < InvulnDuration)
+	{
+		InvulnTimer += DeltaTime;
+	}
 }
 
 // Called to bind functionality to input

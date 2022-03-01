@@ -24,6 +24,7 @@ public:
 	class UCameraComponent* FollowCamera;
 
 	void TakeDMG(float damage);
+	void ApplyStunn(float duration);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Movement)
 	float MaxWalkSpeed;
@@ -50,6 +51,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats)
 		float SpawnRate { 100.f };
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = State)
+		float StunTime{ 0.f };
 
 private:
 
