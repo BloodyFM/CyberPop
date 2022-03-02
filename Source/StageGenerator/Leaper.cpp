@@ -75,7 +75,7 @@ void ALeaper::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (CombatTarget && bInterp)
+	if (CombatTarget && bInterp && !bStunned)
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("spin"));
 		FRotator LookAtYaw = GetLookAtRotationYaw(CombatTarget->GetActorLocation());
