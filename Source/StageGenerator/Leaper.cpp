@@ -224,7 +224,7 @@ void ALeaper::DashSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, A
 void ALeaper::MoveToTarget(class ACreature* Target)
 {
 	SetLeaperMovementStatus(ELeaperMovementStatus::EMS_MoveToTarget);
-	CombatTarget = nullptr;
+	//CombatTarget = nullptr;
 
 	if (AIController)
 	{
