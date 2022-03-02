@@ -63,18 +63,8 @@ void ACreature::ApplyStunn(float duration)
 	if (StunTime < duration)
 	{
 		bStunned = true;
-	}
-	else
-	{
-		bStunned = false;
-		StunTime = 0.f;
-
-	}
-	if (bStunned)
-	{
 		StunTime = duration;
 	}
-
 }
 
 void ACreature::BeginPlay()
@@ -103,9 +93,14 @@ void ACreature::Tick(float DeltaTime)
 		}
 		this->Destroy();
 	}
-	if (StunTime > 0)
+	if (bStunned)
 	{
 		StunTime -= DeltaTime;
+	}
+	if (StunTime <= 0.f)
+	{
+		bStunned = false;
+		StunTime = 0.f;
 	}
 	if (InvulnTimer < InvulnDuration)
 	{

@@ -46,6 +46,7 @@ void ASwordSlice::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActo
 			if (HitEnemies.Contains(Enemy))
 			{
 				UE_LOG(LogTemp, Warning, TEXT("Hit enemy with slice"));
+				Enemy->ApplyStunn(StunTime);
 			}
 		}
 	}

@@ -77,7 +77,7 @@ void ALeaper::Tick(float DeltaTime)
 
 	if (CombatTarget && bInterp)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("spin"));
+		//UE_LOG(LogTemp, Warning, TEXT("spin"));
 		FRotator LookAtYaw = GetLookAtRotationYaw(CombatTarget->GetActorLocation());
 		FRotator InterpRotation = FMath::RInterpTo(GetActorRotation(), LookAtYaw, DeltaTime, TurnRate);
 
@@ -88,17 +88,22 @@ void ALeaper::Tick(float DeltaTime)
 		SetLeaperMovementStatus(ELeaperMovementStatus::EMS_Stun);
 		DeactivateCollision();
 		bInterp = false;
+		AIController->StopMovement();
+		UE_LOG(LogTemp, Warning, TEXT("Stun"));
 	}
 	else if (!bStunned && LeaperMovementStatus == ELeaperMovementStatus::EMS_Stun)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("stun disabled"));
 		if (bInDashSphere)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("stun to attack"));
 			SetLeaperMovementStatus(ELeaperMovementStatus::EMS_Attacking);
 			PrepareDash(CombatTarget);
 			bInterp = true;
 		}
 		else
 		{
+			UE_LOG(LogTemp, Warning, TEXT("stun to move"));
 			MoveToTarget(CombatTarget);
 			bInterp = true;
 		}

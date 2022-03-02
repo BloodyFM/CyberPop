@@ -23,6 +23,9 @@ public:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Spawning")
         TArray<class ACreature*> HitEnemies;
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = State)
+        float StunTime{ 5.f };
+
 
 protected:
     // Called when the game starts or when spawned
