@@ -26,6 +26,9 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = State)
         float StunTime{ 5.f };
 
+    UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "SpawnStunFx"))
+        void SpawnStunFxForDurationOnTarget(float duration, FVector targetlocation);
+
 
 protected:
     // Called when the game starts or when spawned

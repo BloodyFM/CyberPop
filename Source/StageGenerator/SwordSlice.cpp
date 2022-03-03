@@ -47,6 +47,7 @@ void ASwordSlice::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActo
 			{
 				UE_LOG(LogTemp, Warning, TEXT("Hit enemy with slice"));
 				Enemy->ApplyStunn(StunTime);
+				SpawnStunFxForDurationOnTarget(StunTime, Enemy->GetActorLocation());
 			}
 		}
 	}
