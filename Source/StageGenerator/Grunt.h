@@ -45,7 +45,7 @@ public:
 	float MovementSpeed{ 350.f };
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
 	float TurnRate{ 250.f };
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	bool bInterpToTarget{ false };
 
 	// Combat values
