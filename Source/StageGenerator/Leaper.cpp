@@ -99,7 +99,6 @@ void ALeaper::Tick(float DeltaTime)
 			UE_LOG(LogTemp, Warning, TEXT("stun to attack"));
 			SetLeaperMovementStatus(ELeaperMovementStatus::EMS_Attacking);
 			PrepareDash(CombatTarget);
-			bInterp = true;
 		}
 		else
 		{
@@ -194,7 +193,7 @@ void ALeaper::DashSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent,
 		{
 			if (Main->bIsMainCharacter)
 			{
-				CombatTarget = Main;
+				//CombatTarget = Main;
 				bInDashSphere = true;
 				if (!bIsDashing && StunTime <= 0.f)
 				{
@@ -224,7 +223,7 @@ void ALeaper::DashSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, A
 void ALeaper::MoveToTarget(class ACreature* Target)
 {
 	SetLeaperMovementStatus(ELeaperMovementStatus::EMS_MoveToTarget);
-	//CombatTarget = nullptr;
+	CombatTarget = Target;
 
 	if (AIController)
 	{
