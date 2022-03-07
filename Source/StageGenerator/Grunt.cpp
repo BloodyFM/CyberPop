@@ -149,7 +149,7 @@ void AGrunt::ShootFocused()
 	//Rotation.Yaw += FMath::RandRange(-inaccuracy, inaccuracy);
 
 	FTransform BulletTransform;
-	BulletTransform.SetLocation(GetActorLocation() + (GetActorForwardVector() * 10.f) + FVector(0.f, 0.f, 100.f));
+	BulletTransform.SetLocation(GetActorLocation() + (GetActorForwardVector() * 10.f) + FVector(0.f, 0.f, 20.f));
 	BulletTransform.SetRotation(Rotation.Quaternion());
 	BulletTransform.SetScale3D(FVector(1.f));
 
@@ -163,7 +163,7 @@ void AGrunt::ShootSpread()
 	Rotation.Yaw -= 10.f;
 
 	FTransform BulletTransform;
-	BulletTransform.SetLocation(GetActorLocation() + (GetActorForwardVector() * 10.f) + FVector(0.f, 0.f, 100.f));
+	BulletTransform.SetLocation(GetActorLocation() + (GetActorForwardVector() * 10.f) + FVector(0.f, 0.f, 20.f));
 	BulletTransform.SetRotation(Rotation.Quaternion());
 	BulletTransform.SetScale3D(FVector(1.f));
 
