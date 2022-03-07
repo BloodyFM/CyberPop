@@ -127,7 +127,7 @@ void AMain1::RightMouseReleased()
 void AMain1::SpecialPressed()
 {
 	bSpecialPressed = true;
-	if (EquippedWeapon && bCanAttack)
+	if (EquippedWeapon && bCanAttack && DashCharge >= 30.f)
 	{
 		GetCharacterMovement()->MaxWalkSpeed = 0.f;
 		SpecialAttack();
@@ -213,9 +213,9 @@ void AMain1::SpecialAttack()
 
 void AMain1::SwordSlice()
 {
-	if (bSendOutSwordSlice)
+	if (bSendOutSwordSlice && DashCharge >= 30.f)
 	{
-
+		DashCharge -= 30.f;
 		FRotator Rotation = GetActorRotation();
 		FTransform SwordSliceTransform;
 		SwordSliceTransform.SetLocation(GetActorLocation() + (GetActorForwardVector() * 10.f) + FVector(0.f, 0.f, 100.f));
