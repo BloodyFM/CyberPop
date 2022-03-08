@@ -88,11 +88,19 @@ void ALeaper::Tick(float DeltaTime)
 	}
 	if (bStunned && LeaperMovementStatus != ELeaperMovementStatus::EMS_Stun)
 	{
-		SetLeaperMovementStatus(ELeaperMovementStatus::EMS_Stun);
-		DeactivateCollision();
-		bInterp = false;
-		AIController->StopMovement();
-		UE_LOG(LogTemp, Warning, TEXT("Stun"));
+		if (CombatTarget)
+		{
+			SetLeaperMovementStatus(ELeaperMovementStatus::EMS_Stun);
+			DeactivateCollision();
+			bInterp = false;
+			AIController->StopMovement();
+			UE_LOG(LogTemp, Warning, TEXT("Stun"));
+		}
+		else
+		{
+			bStunned = false;
+			StunTime = 0.f;
+		}
 	}
 	else if (!bStunned && LeaperMovementStatus == ELeaperMovementStatus::EMS_Stun)
 	{
