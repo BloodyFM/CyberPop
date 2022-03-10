@@ -52,7 +52,7 @@ void ACreature::TakeDMG(float damage)
 	{
 		InvulnTimer = 0.f;
 		hp -= damage;
-		UE_LOG(LogTemp, Warning, TEXT("Slap"));
+		//UE_LOG(LogTemp, Warning, TEXT("Slap"));
 	}
 	//hp -= damage;
 	//UE_LOG(LogTemp, Warning, TEXT("Slap"));
