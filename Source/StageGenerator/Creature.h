@@ -23,6 +23,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 
+	UFUNCTION(BlueprintCallable)
 	void TakeDMG(float damage);
 	void ApplyStunn(float duration);
 
