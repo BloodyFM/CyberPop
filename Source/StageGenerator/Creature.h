@@ -27,6 +27,10 @@ public:
 	void TakeDMG(float damage);
 	void ApplyStunn(float duration);
 
+	// event for hit fx
+	UFUNCTION(BlueprintImplementableEvent, Category = "Event", meta = (DisplayName = "OnHit"))
+	void OnHit();
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Movement)
 	float MaxWalkSpeed;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Movement)
