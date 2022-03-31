@@ -117,8 +117,8 @@ void ACreature::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	LevelName.RemoveFromStart(GetWorld()->StreamingLevelsPrefix);
 	if (LevelName != "CharSelect")
 	{
-		PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-		PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+		//PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+		//PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 		PlayerInputComponent->BindAction("LeftMouseAction", IE_Pressed, this, &ACreature::LeftMousePressed);
 		PlayerInputComponent->BindAction("LeftMouseAction", IE_Released, this, &ACreature::LeftMouseReleased);
