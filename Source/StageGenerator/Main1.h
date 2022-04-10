@@ -24,6 +24,26 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Movement)
 		float MovementSpeedDash;
 
+
+	//Lock on
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LockOn")
+		class USphereComponent* LockOnSphere;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "LockOn")
+	TArray<ACreature*> LockOnList;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LockOn")
+	ACreature* LockOnTarget = nullptr;
+	UFUNCTION()
+		void RemoveLockOnTarget(ACreature* Creature);
+	UFUNCTION()
+		FRotator GetLookAtRotationYaw(FVector Target);
+	UFUNCTION()
+		ACreature* FindBestLockOnTarget();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Movement")
+	float MagnetSpeed;
+
 	//Attack functions
 	UFUNCTION()
 		void Attack();
@@ -128,5 +148,13 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION()
+		virtual void LockOnSphereOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+			UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+		virtual void LockOnSphereOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+			UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 };

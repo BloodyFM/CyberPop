@@ -8,6 +8,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "CombatSpawner.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ACreature::ACreature()
@@ -96,6 +97,15 @@ void ACreature::Tick(float DeltaTime)
 		if (Master)
 		{
 			Master->RemoveServant(this);
+		}
+		ACharacter* Player = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+		if (Player)
+		{
+			AMain1* Main1 = Cast<AMain1>(Player);
+			if (Main1)
+			{
+				Main1->RemoveLockOnTarget(this);
+			}
 		}
 		this->Destroy();
 	}

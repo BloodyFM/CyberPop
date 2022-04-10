@@ -7,19 +7,27 @@
 #include "SwordSlice.h"
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Engine/StaticMeshSocket.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Animation/AnimMontage.h"
 #include "Animation/AnimInstance.h"
+#include "Kismet/KismetMathLibrary.h"
 
 AMain1::AMain1()
 {
+
+	LockOnSphere = CreateDefaultSubobject<USphereComponent>(TEXT("LockOnSphere"));
+	LockOnSphere->SetupAttachment(GetRootComponent()); 
+	
+
 	bLeftMousePressed = false;
 	bRightMousePressed = false;
 	bSpecialPressed = false;
 
+	MagnetSpeed = 400.f;
 	MovementSpeedDash = 600.f;
 	DashDistance = 5000.f;
 	DashCooldown = 0.1f;
@@ -74,6 +82,11 @@ void AMain1::BeginPlay()
 	EquippedWeapon->Equip(this);
 	//SetEquippedWeapon(nullptr);
 
+	LockOnSphere->OnComponentBeginOverlap.AddDynamic(this, &AMain1::LockOnSphereOverlapBegin);
+	LockOnSphere->OnComponentEndOverlap.AddDynamic(this, &AMain1::LockOnSphereOverlapEnd);
+
+	LockOnList.Empty();
+
 }
 
 
@@ -92,6 +105,21 @@ void AMain1::Tick(float DeltaTime)
 		DashCharge = DashChargeMax;
 	}
 
+	if (LockOnTarget)
+	{
+		//float radius = LockOnTarget->GetRootComponent().GetScaledCapsuleRadius();
+		FVector Direction = LockOnTarget->GetActorLocation() - GetActorLocation();
+		if (Direction.Size() > 90.f)
+		{
+			Direction.Normalize();
+			SetActorLocation(GetActorLocation() + Direction * MagnetSpeed * DeltaTime, true);
+		}
+		FRotator LookAtYaw = GetLookAtRotationYaw(LockOnTarget->GetActorLocation());
+		FRotator InterpRotation = FMath::RInterpTo(GetActorRotation(), LookAtYaw, DeltaTime, 250.f);
+
+		SetActorRotation(InterpRotation);
+	}
+
 }
 
 void AMain1::LeftMousePressed()
@@ -101,6 +129,9 @@ void AMain1::LeftMousePressed()
 	bLeftMousePressed = true;
 	if (EquippedWeapon && bCanAttack)
 	{
+		LockOnTarget = FindBestLockOnTarget();
+
+		GetCharacterMovement()->MaxWalkSpeed = 200.f;
 		Attack();
 		bCanAttack = false;
 	}
@@ -261,6 +292,84 @@ void AMain1::ResetDash()
 {
 	bCanDash = true; // Enables Dash
 }
+
+void AMain1::LockOnSphereOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor)
+	{
+		ACreature* Creature = Cast<ACreature>(OtherActor);
+		if (Creature)
+		{
+			if (!Creature->bIsMainCharacter)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Added possible target."));
+				LockOnList.Add(Creature);
+			}
+		}
+	}
+}
+
+void AMain1::LockOnSphereOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (OtherActor)
+	{
+		ACreature* Creature = Cast<ACreature>(OtherActor);
+		if (Creature)
+		{
+			LockOnList.Remove(Creature);
+		}
+	}
+}
+
+void AMain1::RemoveLockOnTarget(ACreature* Creature)
+{
+	if (LockOnList.Contains(Creature))
+	{
+		LockOnList.Remove(Creature);
+	}
+}
+
+ACreature* AMain1::FindBestLockOnTarget()
+{
+	FRotator ForwardRotator = GetActorRotation();
+	ACreature* BestMatch = nullptr;
+
+	//FRotator LookAtYaw = GetLookAtRotationYaw(Bestmatch->GetActorLocation());
+
+	float CurrentAngle = 1000;
+
+	for (int i = 0; i < LockOnList.Num(); i++)
+	{
+		float NewAngle;
+		FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), LockOnList[i]->GetActorLocation());
+		FRotator YawLookAtRotation = FRotator(0.f, LookAtRotation.Yaw, 0.f);
+
+		NewAngle = YawLookAtRotation.Yaw - ForwardRotator.Yaw;
+
+		if (NewAngle > 0)
+		{
+			NewAngle = -NewAngle;
+
+		}
+		if (CurrentAngle > NewAngle)
+		{
+			CurrentAngle = NewAngle;
+			BestMatch = LockOnList[i];
+		}
+
+	}
+	return BestMatch;
+}
+
+FRotator AMain1::GetLookAtRotationYaw(FVector Target)
+{
+	FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), Target);
+	FRotator YawLookAtRotation = FRotator(0.f, LookAtRotation.Yaw, 0.f);
+	return YawLookAtRotation;
+}
+
 
 void AMain1::Equip()
 {
