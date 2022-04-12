@@ -10,6 +10,7 @@
 #include "AIModule.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "DrawDebugHelpers.h"
 
 
 ALeaper::ALeaper()
@@ -278,6 +279,23 @@ void ALeaper::StrafeAroundCombatTarget(float DeltaTime)
 
 		// if im thinking correctly LeftOrRight = 1 will make it go left and LeftOrRight = -1 make it go right
 		SetActorLocation(GetActorLocation() + clockwise90degree * DeltaTime * LeftOrRight * MovementSpeed, true);
+	}
+}
+
+void ALeaper::LineOfSightCheck(float DeltaTime)
+{
+	if (CombatTarget)
+	{
+		FHitResult Hit;
+		FVector Start = GetActorLocation();
+		FVector End = CombatTarget->GetActorLocation();
+		FCollisionQueryParams TraceParameters;
+		bool bHit = GetWorld()->UWorld::LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, TraceParameters);
+		DrawDebugLine(GetWorld(), Start, End, FColor::Cyan, false, 0.1f);
+		if (bHit)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("%s"), *Hit.GetActor()->GetName())
+		}
 	}
 }
 

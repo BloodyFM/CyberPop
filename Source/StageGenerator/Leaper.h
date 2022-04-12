@@ -105,6 +105,9 @@ public:
 	void StrafeAroundCombatTarget(float DeltaTime);
 	float LeftOrRight;
 
+	UFUNCTION()
+	void LineOfSightCheck(float DeltaTime);
+
 	UFUNCTION(BlueprintCallable)
 	void PrepareDash(class ACreature* Target);
 	UFUNCTION(BlueprintCallable)
