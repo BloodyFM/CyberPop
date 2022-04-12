@@ -102,6 +102,10 @@ public:
 	float MoveToTolerance{ 25.f };
 
 	UFUNCTION(BlueprintCallable)
+	void StrafeAroundCombatTarget(float DeltaTime);
+	float LeftOrRight;
+
+	UFUNCTION(BlueprintCallable)
 	void PrepareDash(class ACreature* Target);
 	UFUNCTION(BlueprintCallable)
 	void Dash();

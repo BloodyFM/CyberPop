@@ -72,6 +72,12 @@ void ALeaper::BeginPlay()
 	AttackBoxR->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	AttackBoxR->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 
+	LeftOrRight = FMath::RandRange(-1.f, 1.f);
+	if (LeftOrRight > 0)
+		LeftOrRight = 1.f;
+	else
+		LeftOrRight = -1.f;
+
 }
 
 void ALeaper::Tick(float DeltaTime)
@@ -255,6 +261,23 @@ void ALeaper::MoveToTarget(class ACreature* Target)
 			UKismetSystemLibrary::DrawDebugSphere(this, Location, 25.f, 8, FLinearColor::Red, 10.f, 1.5f);
 		}
 		*/
+	}
+}
+
+void ALeaper::StrafeAroundCombatTarget(float DeltaTime)
+{
+	if (CombatTarget)
+	{
+		//just in case
+		AIController->StopMovement();
+
+		FVector target = CombatTarget->GetActorLocation();
+		FVector VectorToTarget = target - GetActorLocation();
+		VectorToTarget.Normalize();
+		FVector clockwise90degree = FVector(VectorToTarget.Y, -VectorToTarget.X, VectorToTarget.Z);
+
+		// if im thinking correctly LeftOrRight = 1 will make it go left and LeftOrRight = -1 make it go right
+		SetActorLocation(GetActorLocation() + clockwise90degree * DeltaTime * LeftOrRight * MovementSpeed, true);
 	}
 }
 
