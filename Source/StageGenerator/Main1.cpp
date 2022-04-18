@@ -141,9 +141,11 @@ void AMain1::LeftMouseReleased()
 void AMain1::RightMousePressed()
 {
 	bRightMousePressed = true;
-	if (DashCharge >= 30.f)
+	if (EquippedWeapon && bCanAttack && DashCharge >= 30.f)
 	{
-		Dash();
+		GetCharacterMovement()->MaxWalkSpeed = 0.f;
+		SpecialAttack();
+		bCanAttack = false;
 	}
 }
 
@@ -155,11 +157,9 @@ void AMain1::RightMouseReleased()
 void AMain1::SpecialPressed()
 {
 	bSpecialPressed = true;
-	if (EquippedWeapon && bCanAttack && DashCharge >= 30.f)
+	if (DashCharge >= 30.f)
 	{
-		GetCharacterMovement()->MaxWalkSpeed = 0.f;
-		SpecialAttack();
-		bCanAttack = false;
+		Dash();
 	}
 
 }
