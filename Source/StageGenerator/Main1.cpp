@@ -129,9 +129,6 @@ void AMain1::LeftMousePressed()
 	bLeftMousePressed = true;
 	if (EquippedWeapon && bCanAttack)
 	{
-		LockOnTarget = FindBestLockOnTarget();
-
-		GetCharacterMovement()->MaxWalkSpeed = 200.f;
 		Attack();
 		bCanAttack = false;
 	}
@@ -361,6 +358,12 @@ ACreature* AMain1::FindBestLockOnTarget()
 
 	}
 	return BestMatch;
+}
+
+void AMain1::LockOnNotify()
+{
+	LockOnTarget = FindBestLockOnTarget();
+	GetCharacterMovement()->MaxWalkSpeed = 200.f;
 }
 
 FRotator AMain1::GetLookAtRotationYaw(FVector Target)
