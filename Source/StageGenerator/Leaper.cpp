@@ -101,7 +101,7 @@ void ALeaper::Tick(float DeltaTime)
 			DeactivateCollision();
 			bInterp = false;
 			AIController->StopMovement();
-			UE_LOG(LogTemp, Warning, TEXT("Stun"));
+			//UE_LOG(LogTemp, Warning, TEXT("Stun"));
 		}
 		else
 		{
@@ -111,16 +111,16 @@ void ALeaper::Tick(float DeltaTime)
 	}
 	else if (!bStunned && LeaperMovementStatus == ELeaperMovementStatus::EMS_Stun)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("stun disabled"));
+		//UE_LOG(LogTemp, Warning, TEXT("stun disabled"));
 		if (bInDashSphere)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("stun to attack"));
+			//UE_LOG(LogTemp, Warning, TEXT("stun to attack"));
 			SetLeaperMovementStatus(ELeaperMovementStatus::EMS_Attacking);
 			PrepareDash(CombatTarget);
 		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("stun to move"));
+			//UE_LOG(LogTemp, Warning, TEXT("stun to move"));
 			MoveToTarget(CombatTarget);
 			bInterp = true;
 		}
@@ -328,7 +328,7 @@ void ALeaper::AttackBoxOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 			if (Main->bIsMainCharacter)
 				HitPlayer();
 
-			UE_LOG(LogTemp, Warning, TEXT("AttackBoxOnOverlapBegin()"));
+			//UE_LOG(LogTemp, Warning, TEXT("AttackBoxOnOverlapBegin()"));
 		}
 	}
 }
@@ -340,7 +340,7 @@ void ALeaper::HitPlayer()
 	{
 		CombatTarget->TakeDMG(Damage);
 	}
-	UE_LOG(LogTemp, Warning, TEXT("HitPlayer()"));
+	//UE_LOG(LogTemp, Warning, TEXT("HitPlayer()"));
 }
 
 void ALeaper::Aggro(ACreature* target)
