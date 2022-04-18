@@ -31,9 +31,9 @@ ALeaper::ALeaper()
 	DashSphere->InitSphereRadius(100.f);
 
 	AttackBoxL = CreateDefaultSubobject<UBoxComponent>(TEXT("AttackBoxL"));
-	AttackBoxL->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("LeftClawSocket"));
+	//AttackBoxL->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("LeftClawSocket"));
 	AttackBoxR = CreateDefaultSubobject<UBoxComponent>(TEXT("AttackBoxR"));
-	AttackBoxR->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("RightClawSocket"));
+	//AttackBoxR->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("RightClawSocket"));
 
 	bOverlappingDashSphere = false;
 
@@ -49,8 +49,8 @@ void ALeaper::BeginPlay()
 
 	AIController = Cast<AAIController>(GetController());
 
-	//AttackBoxL->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("LeftClawSocket"));
-	//AttackBoxR->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("RightClawSocket"));
+	AttackBoxL->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("LeftClawSocket"));
+	AttackBoxR->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("RightClawSocket"));
 
 	//AggroSphere->OnComponentBeginOverlap.AddDynamic(this, &ALeaper::AggroSphereOnOverlapBegin);
 	//AggroSphere->OnComponentEndOverlap.AddDynamic(this, &ALeaper::AggroSphereOnOverlapEnd);

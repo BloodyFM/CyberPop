@@ -24,8 +24,8 @@ AMain2::AMain2()
 	MagnetSpeed = 400.f;
 	MovementSpeedTank = 600.f;
 
-	FistBoxL->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("LeftFistSocket"));
-	FistBoxR->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("RightFistSocket"));
+	//FistBoxL->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("LeftFistSocket"));
+	//FistBoxR->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("RightFistSocket"));
 }
 
 void AMain2::BeginPlay()
@@ -38,6 +38,9 @@ void AMain2::BeginPlay()
 	LockOnSphere->OnComponentEndOverlap.AddDynamic(this, &AMain2::LockOnSphereOverlapEnd);
 
 	LockOnList.Empty();
+
+	FistBoxL->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("LeftFistSocket"));
+	FistBoxR->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("RightFistSocket"));
 
 }
 
