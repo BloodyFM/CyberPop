@@ -59,6 +59,8 @@ void ACombatSpawner::BeginPlay()
 			FVector Origin = SpawnBox->GetComponentLocation();
 
 			FVector Point = UKismetMathLibrary::RandomPointInBoundingBox(Origin, Extent);
+			FRotator Rotation= GetActorRotation();
+			Point = Origin + Rotation.RotateVector(Origin - Point); // account for rotation
 			FTransform SpawnTransform;
 			SpawnTransform.SetLocation(Point);
 			ACreature* SpawnedCreature = GetWorld()->SpawnActor<ACreature>(CreatureClasses[i], SpawnTransform);
