@@ -9,7 +9,10 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Engine/StaticMeshSocket.h"
 #include "Engine/SkeletalMeshSocket.h"
+#include "Animation/AnimMontage.h"
+#include "Animation/AnimInstance.h"
 #include "Kismet/KismetMathLibrary.h"
+
 
 AMain2::AMain2()
 {
@@ -20,9 +23,33 @@ AMain2::AMain2()
 	FistBoxL = CreateDefaultSubobject<UBoxComponent>(TEXT("FistBoxL"));
 	FistBoxR = CreateDefaultSubobject<UBoxComponent>(TEXT("FistBoxR"));
 
+	bLeftMousePressed = false;
+	bRightMousePressed = false;
+	bSpecialPressed = false;
 
 	MagnetSpeed = 400.f;
 	MovementSpeedTank = 600.f;
+
+	ShieldCharge = 90.f;
+
+	ShieldCharge = ShieldChargeMax;
+
+	BulletChargeMax = 90.f;
+
+	BulletCharge = 0.f;
+
+	DrainRate = 2.f;
+
+	bIsMainCharacter = true;
+
+	bCanAttack = true;
+
+	bNotAttacked = true;
+	bAttack1Over = false;
+	bAttack2Over = false;
+	bAttack3Over = false;
+
+	bShielding = false;
 
 	//FistBoxL->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("LeftFistSocket"));
 	//FistBoxR->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("RightFistSocket"));
@@ -47,7 +74,138 @@ void AMain2::BeginPlay()
 void AMain2::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	FString LevelName = GetWorld()->GetMapName();
+	LevelName.RemoveFromStart(GetWorld()->StreamingLevelsPrefix);
+	if (LevelName != "CharSelect")
+	{
+		hp -= DeltaTime * DrainRate;
+		ShieldCharge += DeltaTime * DrainRate;
+	}
+	if (ShieldCharge > ShieldChargeMax)
+	{
+		ShieldCharge = ShieldChargeMax;
+	}
+
+	if (LockOnTarget)
+	{
+		//float radius = LockOnTarget->GetRootComponent().GetScaledCapsuleRadius();
+		FVector Direction = LockOnTarget->GetActorLocation() - GetActorLocation();
+		if (Direction.Size() > 90.f)
+		{
+			Direction.Normalize();
+			SetActorLocation(GetActorLocation() + Direction * MagnetSpeed * DeltaTime, true);
+		}
+		FRotator LookAtYaw = GetLookAtRotationYaw(LockOnTarget->GetActorLocation());
+		FRotator InterpRotation = FMath::RInterpTo(GetActorRotation(), LookAtYaw, DeltaTime, 250.f);
+
+		SetActorRotation(InterpRotation);
+	}
 }
+
+void AMain2::LeftMousePressed()
+{
+	bLeftMousePressed = true;
+	if (!bShielding && bCanAttack)
+	{
+		Attack();
+		bCanAttack = false;
+	}
+}
+
+void AMain2::LeftMouseReleased()
+{
+	bLeftMousePressed = false;
+}
+
+void AMain2::RightMousePressed()
+{
+
+}
+void AMain2::RightMouseReleased()
+{
+
+}
+
+void AMain2::SpecialPressed()
+{
+
+}
+void AMain2::SpecialReleased()
+{
+
+}
+
+void AMain2::GiveHP()
+{
+	hp += 50.f;
+
+	if (hp > maxHp)
+	{
+		hp = maxHp;
+	}
+}
+
+void AMain2::GiveShield()
+{
+	ShieldCharge += 30.f;
+	if (ShieldCharge > ShieldChargeMax)
+	{
+		ShieldCharge = ShieldChargeMax;
+	}
+}
+
+void AMain2::GiveBullets()
+{
+
+}
+
+void AMain2::Attack()
+{
+	bAttacking = true;
+
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+
+	if (AnimInstance && CombatMontage)
+	{
+		if (bNotAttacked || bAttack3Over)
+		{
+			AnimInstance->Montage_Play(CombatMontage, 1.f);
+			AnimInstance->Montage_JumpToSection(("Attack"), CombatMontage);
+			bNotAttacked = false;
+			bAttack1Over = true;
+			bAttack3Over = false;
+		}
+		else if (bAttack1Over)
+		{
+			AnimInstance->Montage_Play(CombatMontage, 1.f);
+			AnimInstance->Montage_JumpToSection(("Attack2"), CombatMontage);
+			bAttack2Over = true;
+			bAttack1Over = false;
+		}
+		else if (bAttack2Over)
+		{
+			AnimInstance->Montage_Play(CombatMontage, 1.f);
+			AnimInstance->Montage_JumpToSection(("Attack3"), CombatMontage);
+			bAttack3Over = true;
+			bAttack2Over = false;
+		}
+
+	}
+}
+
+void AMain2::RangedAttack()
+{
+
+}
+
+void AMain2::ShieldAbility()
+{
+
+}
+
+
+
 
 void AMain2::LockOnSphereOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
