@@ -46,6 +46,77 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Movement")
 		float MagnetSpeed;
 
+
+	//Attack functions
+	UFUNCTION()
+		void Attack();
+	UFUNCTION()
+		void RangedAttack();
+	UFUNCTION()
+		void ShieldAbility();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack")
+		bool bCanAttack;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack")
+		bool bNotAttacked;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack")
+		bool bAttack1Over;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack")
+		bool bAttack2Over;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack")
+		bool bAttack3Over;
+
+	//Shield floats
+	UPROPERTY()
+		bool bShielding;
+	UPROPERTY()
+		bool bCanShield;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats)
+		float ShieldCharge;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats)
+		float ShieldChargeMax;
+
+	//Bullet Floats
+	UPROPERTY()
+		bool bShooting;
+	UPROPERTY()
+		bool bCanShoot;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats)
+		float BulletCharge;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats)
+		float BulletChargeMax;
+
+	//Left mouse action
+	virtual void LeftMousePressed() override;
+	virtual void LeftMouseReleased() override;
+
+	//Right mouse action
+	virtual void RightMousePressed() override;
+	virtual void RightMouseReleased() override;
+
+	//Special Action on E
+	virtual void SpecialPressed() override;
+	virtual void SpecialReleased() override;
+
+	bool bLeftMousePressed;
+	bool bRightMousePressed;
+	bool bSpecialPressed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+		float DrainRate;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Anims")
+		bool bAttacking;
+
+	void GiveHP();
+
+	void GiveShield();
+
+	void GiveBullets();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Anims")
+		class UAnimMontage* CombatMontage;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
