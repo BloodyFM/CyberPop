@@ -9,13 +9,13 @@ void AMainPlayerController::BeginPlay()
 	Super::BeginPlay();
 	FString LevelName = GetWorld()->GetMapName();
 	LevelName.RemoveFromStart(GetWorld()->StreamingLevelsPrefix);
-	if (MenuOverlayAsset && LevelName == "CharSelect")
+	if (MenuOverlayAsset && LevelName == "Menu")
 	{
 		MenuOverlay = CreateWidget<UUserWidget>(this, MenuOverlayAsset);
 		MenuOverlay->AddToViewport();
 		MenuOverlay->SetVisibility(ESlateVisibility::Visible);
 	}
-	else if (HUDOverlayAsset && LevelName != "CharSelect")
+	else if (HUDOverlayAsset && LevelName != "Menu")
 	{
 		HUDOverlay = CreateWidget<UUserWidget>(this, HUDOverlayAsset);
 		HUDOverlay->AddToViewport();
