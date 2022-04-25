@@ -345,12 +345,12 @@ ACreature* AMain1::FindBestLockOnTarget()
 
 		NewAngle = YawLookAtRotation.Yaw - ForwardRotator.Yaw;
 
-		if (NewAngle > 0)
+		if (NewAngle < 0)
 		{
 			NewAngle = -NewAngle;
 
 		}
-		if (CurrentAngle > NewAngle)
+		if (CurrentAngle > NewAngle && NewAngle <= 90.f)
 		{
 			CurrentAngle = NewAngle;
 			BestMatch = LockOnList[i];
