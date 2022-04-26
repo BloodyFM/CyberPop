@@ -1,12 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Boss1AnimInstance.h"
-#include "Boss1.h"
+#include "Boss2AnimInstance.h"
+#include "Boss2.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 
-void UBoss1AnimInstance::NativeInitializeAnimation()
+void UBoss2AnimInstance::NativeInitializeAnimation()
 {
 	if (Pawn == nullptr)
 	{
@@ -14,7 +14,7 @@ void UBoss1AnimInstance::NativeInitializeAnimation()
 	}
 }
 
-void UBoss1AnimInstance::UpdateAnimationProperties()
+void UBoss2AnimInstance::UpdateAnimationProperties()
 {
 	if (Pawn == nullptr)
 	{
@@ -22,7 +22,7 @@ void UBoss1AnimInstance::UpdateAnimationProperties()
 
 		if (Pawn)
 		{
-			Boss = Cast<ABoss1>(Pawn);
+			Boss = Cast<ABoss2>(Pawn);
 		}
 	}
 
@@ -32,7 +32,13 @@ void UBoss1AnimInstance::UpdateAnimationProperties()
 		FVector LateralSpeed = FVector(Speed.X, Speed.Y, 0.f);
 		MovementSpeed = LateralSpeed.Size();
 
-		Boss = Cast<ABoss1>(Pawn);
+		FRotator Rotation = Pawn->GetActorRotation();
+
+		LateralSpeed.RotateAngleAxis(Rotation.Yaw, FVector(0, 0, 1));
+		XMovement = LateralSpeed.X;
+		YMovement = LateralSpeed.Y;
+
+		Boss = Cast<ABoss2>(Pawn);
 
 	}
 }
