@@ -4,6 +4,7 @@
 #include "Main2.h"
 #include "Leaper.h"
 #include "Grunt.h"
+#include "Bullet.h"
 #include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/SkeletalMeshComponent.h"
@@ -25,6 +26,12 @@ AMain2::AMain2()
 	FistBoxL = CreateDefaultSubobject<UBoxComponent>(TEXT("FistBoxL"));
 	FistBoxR = CreateDefaultSubobject<UBoxComponent>(TEXT("FistBoxR"));
 
+	ShieldBox = CreateDefaultSubobject<UBoxComponent>(TEXT("ShieldBox"));
+	ShieldBox->SetupAttachment(GetRootComponent());
+
+	ShieldMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShieldMesh"));
+	ShieldMesh->SetupAttachment(ShieldBox);
+
 	bLeftMousePressed = false;
 	bRightMousePressed = false;
 	bSpecialPressed = false;
@@ -36,11 +43,16 @@ AMain2::AMain2()
 
 	ShieldCharge = ShieldChargeMax;
 
+	ShieldChargeMinimum = 30.f;
+
 	BulletChargeMax = 90.f;
 
 	BulletCharge = 0.f;
 
 	DrainRate = 2.f;
+
+	ShieldDrainRateUp = 10.f;
+	ShieldDrainRateDown = 20.f;
 
 	bIsMainCharacter = true;
 
@@ -76,6 +88,9 @@ void AMain2::BeginPlay()
 	FistBoxR->OnComponentBeginOverlap.AddDynamic(this, &AMain2::FistBoxOverlapBegin);
 	FistBoxR->OnComponentEndOverlap.AddDynamic(this, &AMain2::FistBoxOverlapEnd);
 
+	ShieldBox->OnComponentBeginOverlap.AddDynamic(this, &AMain2::ShieldBoxOverlapBegin);
+	ShieldBox->OnComponentEndOverlap.AddDynamic(this, &AMain2::ShieldBoxOverlapEnd);
+
 	FistBoxL->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	FistBoxL->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
 	FistBoxL->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
@@ -84,6 +99,11 @@ void AMain2::BeginPlay()
 	FistBoxR->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
 	FistBoxR->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	FistBoxR->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+
+	ShieldBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	ShieldBox->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+	ShieldBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	ShieldBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 
 	LockOnList.Empty();
 
@@ -101,11 +121,18 @@ void AMain2::Tick(float DeltaTime)
 	if (LevelName != "CharSelect")
 	{
 		hp -= DeltaTime * DrainRate;
-		ShieldCharge += DeltaTime * DrainRate;
+		if(bShielding)
+		ShieldCharge -= DeltaTime * ShieldDrainRateDown;
+		else
+		ShieldCharge += DeltaTime * ShieldDrainRateUp;
 	}
 	if (ShieldCharge > ShieldChargeMax)
 	{
 		ShieldCharge = ShieldChargeMax;
+	}
+	if (ShieldCharge <= 0.f)
+	{
+		RightMouseReleased();
 	}
 
 	if (LockOnTarget)
@@ -141,11 +168,22 @@ void AMain2::LeftMouseReleased()
 
 void AMain2::RightMousePressed()
 {
+	
+	if (ShieldCharge >= ShieldChargeMinimum)
+	{
+	bShielding = true;
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	AnimInstance->Montage_Play(CombatMontage, 1.f);
+	AnimInstance->Montage_JumpToSection(("Shield_2"), CombatMontage);
+	}
 
 }
 void AMain2::RightMouseReleased()
 {
 
+	bShielding = false;
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+	AnimInstance->Montage_Stop(0.3f, CombatMontage);
 }
 
 void AMain2::SpecialPressed()
@@ -220,11 +258,6 @@ void AMain2::RangedAttack()
 
 }
 
-void AMain2::ShieldAbility()
-{
-
-}
-
 void AMain2::FistBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
@@ -261,6 +294,37 @@ void AMain2::DeactivateCollision()
 	FistBoxR->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
+void AMain2::ShieldBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor->IsA(ABullet::StaticClass()))
+	{
+		ABullet* Bullet = Cast<ABullet>(OtherActor);
+		if (Bullet)
+		{
+			GiveBullets();
+			Bullet->Destroy();
+		}
+	}
+}
+
+void AMain2::ShieldBoxOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+
+}
+
+void AMain2::ActivateShield()
+{
+	ShieldBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	ShieldBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+}
+
+void AMain2::DeactivateShield()
+{
+	ShieldBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	ShieldBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
 
 void AMain2::LockOnSphereOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
