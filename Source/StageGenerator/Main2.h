@@ -24,6 +24,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Attack")
 		class UBoxComponent* FistBoxR;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shield")
+		class UBoxComponent* ShieldBox;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Shield")
+	class UStaticMeshComponent* ShieldMesh;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Movement)
 		float MovementSpeedTank;
 
@@ -52,8 +58,6 @@ public:
 		void Attack();
 	UFUNCTION()
 		void RangedAttack();
-	UFUNCTION()
-		void ShieldAbility();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack")
 		bool bCanAttack;
@@ -67,7 +71,7 @@ public:
 		bool bAttack3Over;
 
 	//Shield floats
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shield")
 		bool bShielding;
 	UPROPERTY()
 		bool bCanShield;
@@ -75,6 +79,8 @@ public:
 		float ShieldCharge;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats)
 		float ShieldChargeMax;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats)
+		float ShieldChargeMinimum;
 
 	//Bullet Floats
 	UPROPERTY()
@@ -105,8 +111,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 		float DrainRate;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shield")
+		float ShieldDrainRateUp;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shield")
+		float ShieldDrainRateDown;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Anims")
 		bool bAttacking;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item | Combat")
 		float Damage;
@@ -141,6 +153,20 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void DeactivateCollision();
+
+	UFUNCTION()
+		virtual void ShieldBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+			int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+		virtual void ShieldBoxOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+			UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	UFUNCTION(BlueprintCallable)
+		void ActivateShield();
+
+	UFUNCTION(BlueprintCallable)
+		void DeactivateShield();
 
 	UFUNCTION()
 		virtual void LockOnSphereOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
