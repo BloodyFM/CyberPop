@@ -108,6 +108,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Anims")
 		bool bAttacking;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item | Combat")
+		float Damage;
+
 	void GiveHP();
 
 	void GiveShield();
@@ -124,6 +127,20 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION()
+		virtual void FistBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+			int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+		virtual void FistBoxOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+			UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+	UFUNCTION(BlueprintCallable)
+		void ActivateCollision();
+
+	UFUNCTION(BlueprintCallable)
+		void DeactivateCollision();
 
 	UFUNCTION()
 		virtual void LockOnSphereOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
