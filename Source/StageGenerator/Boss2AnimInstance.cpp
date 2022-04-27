@@ -38,6 +38,8 @@ void UBoss2AnimInstance::UpdateAnimationProperties()
 		XMovement = LateralSpeed.X;
 		YMovement = LateralSpeed.Y;
 
+		bIsInAir = Pawn->GetMovementComponent()->IsFalling();
+
 		Boss = Cast<ABoss2>(Pawn);
 
 	}

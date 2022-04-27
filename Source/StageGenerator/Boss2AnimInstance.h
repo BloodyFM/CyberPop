@@ -29,6 +29,9 @@ public:
 		float MovementSpeed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Movement)
+		bool bIsInAir;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Movement)
 		class APawn* Pawn;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Movement)

@@ -42,6 +42,22 @@ FRotator ABoss2::GetLookAtRotationYaw(FVector Target)
 	return YawLookAtRotation;
 }
 
+void ABoss2::AOEDamage()
+{
+
+	float distance = FVector(GetActorLocation() - CombatTarget->GetActorLocation()).Size();
+
+	if (distance <= AOERange)
+	{
+		CombatTarget->TakeDMG(33.f);
+	}
+}
+
+void ABoss2::InitiateJumpToCombatTarget()
+{
+
+}
+
 void ABoss2::Aggro(ACreature* target)
 {
 	AIController = Cast<AAIController>(GetController());

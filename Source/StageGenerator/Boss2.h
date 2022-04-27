@@ -51,6 +51,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
 		TSubclassOf<class ABullet> BulletClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "combat")
+		float AOERange{ 250.f };
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "combat")
+		FVector JumpTargetLocation;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -64,6 +69,12 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "AI")
 	ACreature* CombatTarget{ nullptr };
+
+	UFUNCTION(BlueprintCallable)
+	void AOEDamage();
+
+	UFUNCTION(BlueprintCallable)
+	void InitiateJumpToCombatTarget();
 
 	virtual void Aggro(class ACreature* target) override;
 
