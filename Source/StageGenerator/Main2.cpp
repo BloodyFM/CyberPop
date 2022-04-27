@@ -2,6 +2,8 @@
 
 
 #include "Main2.h"
+#include "Leaper.h"
+#include "Grunt.h"
 #include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/SkeletalMeshComponent.h"
@@ -51,6 +53,10 @@ AMain2::AMain2()
 
 	bShielding = false;
 
+	Damage = 100.f;
+
+	InvulnDuration = 1.f;
+
 	//FistBoxL->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("LeftFistSocket"));
 	//FistBoxR->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("RightFistSocket"));
 }
@@ -63,6 +69,21 @@ void AMain2::BeginPlay()
 
 	LockOnSphere->OnComponentBeginOverlap.AddDynamic(this, &AMain2::LockOnSphereOverlapBegin);
 	LockOnSphere->OnComponentEndOverlap.AddDynamic(this, &AMain2::LockOnSphereOverlapEnd);
+
+	FistBoxL->OnComponentBeginOverlap.AddDynamic(this, &AMain2::FistBoxOverlapBegin);
+	FistBoxL->OnComponentEndOverlap.AddDynamic(this, &AMain2::FistBoxOverlapEnd);
+
+	FistBoxR->OnComponentBeginOverlap.AddDynamic(this, &AMain2::FistBoxOverlapBegin);
+	FistBoxR->OnComponentEndOverlap.AddDynamic(this, &AMain2::FistBoxOverlapEnd);
+
+	FistBoxL->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	FistBoxL->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+	FistBoxL->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	FistBoxL->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+	FistBoxR->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	FistBoxR->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+	FistBoxR->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	FistBoxR->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 
 	LockOnList.Empty();
 
@@ -204,7 +225,41 @@ void AMain2::ShieldAbility()
 
 }
 
+void AMain2::FistBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor->IsA(ALeaper::StaticClass()) || OtherActor->IsA(AGrunt::StaticClass()))
+	{
+		ACreature* Enemy = Cast<ACreature>(OtherActor);
+		if (!Enemy->bIsMainCharacter)
+		{
+			if (Enemy->getHp() - Damage <= 0.f)
+			{
+				GiveHP();
+				GiveShield();
+			}
+			Enemy->TakeDMG(Damage);
+		}
+	}
+}
 
+void AMain2::FistBoxOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+
+}
+
+void AMain2::ActivateCollision()
+{
+	FistBoxL->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	FistBoxR->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+}
+
+void AMain2::DeactivateCollision()
+{
+	FistBoxL->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	FistBoxR->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
 
 
 void AMain2::LockOnSphereOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
