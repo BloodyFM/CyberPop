@@ -54,6 +54,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "combat")
 		float AOERange{ 250.f };
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "combat")
+		float JumpDistance{ 0.f };
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "combat")
+		FVector JumpStartLocation;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "combat")
 		FVector JumpTargetLocation;
 
 protected:

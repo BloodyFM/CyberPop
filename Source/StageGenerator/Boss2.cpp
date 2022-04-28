@@ -55,7 +55,13 @@ void ABoss2::AOEDamage()
 
 void ABoss2::InitiateJumpToCombatTarget()
 {
+	JumpStartLocation = GetActorLocation();
+	if (CombatTarget)
+		JumpTargetLocation = CombatTarget->GetActorLocation();
+	else
+		JumpTargetLocation = JumpStartLocation;
 
+	JumpDistance = FVector(JumpTargetLocation - JumpStartLocation).Size();
 }
 
 void ABoss2::Aggro(ACreature* target)
