@@ -175,6 +175,7 @@ void AMain2::RightMousePressed()
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	AnimInstance->Montage_Play(CombatMontage, 1.f);
 	AnimInstance->Montage_JumpToSection(("Shield_2"), CombatMontage);
+	ShieldOpacityOn();
 	}
 
 }
@@ -184,6 +185,7 @@ void AMain2::RightMouseReleased()
 	bShielding = false;
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	AnimInstance->Montage_Stop(0.3f, CombatMontage);
+	ShieldOpacityOff();
 }
 
 void AMain2::SpecialPressed()
@@ -297,11 +299,13 @@ void AMain2::DeactivateCollision()
 void AMain2::ShieldBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor->IsA(ABullet::StaticClass()))
+	if (OtherActor)
 	{
 		ABullet* Bullet = Cast<ABullet>(OtherActor);
+		//AGrunt* Grunt = Cast<AGrunt>(OtherActor);
 		if (Bullet)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Found Bullet"));
 			GiveBullets();
 			Bullet->Destroy();
 		}
@@ -317,13 +321,13 @@ void AMain2::ShieldBoxOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActo
 void AMain2::ActivateShield()
 {
 	ShieldBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	ShieldBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	UE_LOG(LogTemp, Warning, TEXT("Collision Activated"));
 }
 
 void AMain2::DeactivateShield()
 {
 	ShieldBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	ShieldBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	UE_LOG(LogTemp, Warning, TEXT("Collision Deactivated"));
 }
 
 void AMain2::LockOnSphereOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
