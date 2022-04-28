@@ -235,7 +235,6 @@ void AMain1::SpecialAttack()
 		AnimInstance->Montage_JumpToSection(("SpecialAttack"), CombatMontage);
 
 		bSendOutSwordSlice = true;
-
 	}
 }
 
