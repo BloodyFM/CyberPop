@@ -3,12 +3,14 @@
 
 #include "Bullet.h"
 #include "Components/SphereComponent.h"
+#include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundCue.h"
 #include "Creature.h"
 #include "Main1.h"
+#include "Main2.h"
 
 
 ABullet::ABullet()
@@ -66,6 +68,7 @@ void ABullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* O
 		if (HitTarget)
 		{
 			bool Ignore = OtherComp->ComponentHasTag("Ignore");
+			bool ShieldTag = OtherComp->ComponentHasTag("ShieldTag");
 			if (bHarmsMain == HitTarget->bIsMainCharacter && !Ignore)
 			{
 				AMain1* MainTarget = Cast<AMain1>(OtherActor);
@@ -81,12 +84,25 @@ void ABullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* O
 						OverlapUtility();
 					}
 				}
+				/**AMain2* MainTarget2 = Cast<AMain2>(OtherActor);
+				if (MainTarget2)
+				{
+					if (MainTarget2)
+					{
+
+					}
+				}*/
+				else if (ShieldTag)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("Bullet Hit Shield."));
+					Destroy();
+				}
 				else
 				{
 					HitTarget->TakeDMG(Damage);
 					OverlapUtility();
 				}
-				UE_LOG(LogTemp, Warning, TEXT("Overlap"));
+				//UE_LOG(LogTemp, Warning, TEXT("Overlap"));
 			}
 		}
 	}
