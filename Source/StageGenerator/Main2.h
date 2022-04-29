@@ -129,6 +129,15 @@ public:
 
 	void GiveBullets();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawning")
+		TSubclassOf<class AMC2Bullet> MC2BulletClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Attack")
+		bool bSendOutBullet;
+
+	UFUNCTION(BlueprintCallable)
+		void BulletSpawn();
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Anims")
 		class UAnimMontage* CombatMontage;
 

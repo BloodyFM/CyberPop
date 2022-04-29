@@ -5,6 +5,7 @@
 #include "Leaper.h"
 #include "Grunt.h"
 #include "Bullet.h"
+#include "MC2Bullet.h"
 #include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/SkeletalMeshComponent.h"
@@ -47,7 +48,7 @@ AMain2::AMain2()
 
 	BulletChargeMax = 90.f;
 
-	BulletCharge = 0.f;
+	BulletCharge = 90.f;
 
 	DrainRate = 2.f;
 
@@ -169,13 +170,15 @@ void AMain2::LeftMouseReleased()
 void AMain2::RightMousePressed()
 {
 	
-	if (ShieldCharge >= ShieldChargeMinimum)
+	if (!bShielding && bCanAttack && (ShieldCharge >= ShieldChargeMinimum))
 	{
 	bShielding = true;
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	AnimInstance->Montage_Play(CombatMontage, 1.f);
 	AnimInstance->Montage_JumpToSection(("Shield_2"), CombatMontage);
 	ShieldOpacityOn();
+
+	bCanAttack = false;
 	}
 
 }
@@ -186,15 +189,22 @@ void AMain2::RightMouseReleased()
 	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
 	AnimInstance->Montage_Stop(0.3f, CombatMontage);
 	ShieldOpacityOff();
+	bCanAttack = true;
 }
 
 void AMain2::SpecialPressed()
 {
-
+	bSpecialPressed = true;
+	if (!bShielding && bCanAttack && BulletCharge >= 10.f)
+	{
+		bCanAttack = false;
+		//GetCharacterMovement()->MaxWalkSpeed = 0.f;
+		RangedAttack();
+	}
 }
 void AMain2::SpecialReleased()
 {
-
+	bSpecialPressed = false;
 }
 
 void AMain2::GiveHP()
@@ -218,8 +228,13 @@ void AMain2::GiveShield()
 
 void AMain2::GiveBullets()
 {
-
+	BulletCharge += 5.f;
+	if (BulletCharge > BulletChargeMax)
+	{
+		BulletCharge = BulletChargeMax;
+	}
 }
+
 
 void AMain2::Attack()
 {
@@ -257,7 +272,44 @@ void AMain2::Attack()
 
 void AMain2::RangedAttack()
 {
+	bAttacking = true;
 
+	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+
+	if (AnimInstance && CombatMontage)
+	{
+		AnimInstance->Montage_Play(CombatMontage, 1.f);
+		AnimInstance->Montage_JumpToSection(("Blaster"), CombatMontage);
+
+		bSendOutBullet = true;
+	}
+}
+
+void AMain2::BulletSpawn()
+{
+	if (bSendOutBullet && BulletCharge >= 10.f)
+	{
+		BulletCharge -= 10.f;
+		FRotator Rotation = GetActorRotation();
+		FTransform BulletTransform;
+		FVector BulletDisplacement = GetActorForwardVector();
+		BulletDisplacement = FVector(BulletDisplacement.Y, -BulletDisplacement.X, 0.f); //Rotates 90 degrees. (only works on that tho)
+		BulletTransform.SetLocation(GetActorLocation() + (GetActorForwardVector() * 70.f) + (BulletDisplacement * 30.f) + FVector(0.f, 0.f, 100.f));
+		BulletTransform.SetRotation(Rotation.Quaternion());
+		BulletTransform.SetScale3D(FVector(1.f));
+
+		GetWorld()->SpawnActor<AMC2Bullet>(MC2BulletClass, BulletTransform);
+
+		BulletTransform.SetLocation(GetActorLocation() + (GetActorForwardVector() * 70.f) + (BulletDisplacement * -30.f) + FVector(0.f, 0.f, 100.f));
+		BulletTransform.SetRotation(Rotation.Quaternion());
+		BulletTransform.SetScale3D(FVector(1.f));
+		GetWorld()->SpawnActor<AMC2Bullet>(MC2BulletClass, BulletTransform);
+
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *GetActorForwardVector().ToString());
+		UE_LOG(LogTemp, Warning, TEXT("%s"), *BulletDisplacement.ToString());
+	}
+
+	bSendOutBullet = false;
 }
 
 void AMain2::FistBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,

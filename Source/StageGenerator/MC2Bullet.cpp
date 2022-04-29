@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Bullet.h"
+#include "MC2Bullet.h"
 #include "Components/SphereComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
@@ -9,13 +9,14 @@
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundCue.h"
 #include "Creature.h"
-#include "Main1.h"
+#include "Leaper.h"
+#include "Grunt.h"
 #include "Main2.h"
 
-
-ABullet::ABullet()
+// Sets default values
+AMC2Bullet::AMC2Bullet()
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	HitBox = CreateDefaultSubobject<USphereComponent>(TEXT("HitBox"));
@@ -27,27 +28,27 @@ ABullet::ABullet()
 	IdleParticlesComponent = CreateAbstractDefaultSubobject<UParticleSystemComponent>(TEXT("IdleParticlesComponent"));
 	IdleParticlesComponent->SetupAttachment(GetRootComponent());
 
-	Damage = 10.f;
-	MovementSpeed = 200.f;
+	Damage = 30.f;
+	MovementSpeed = 800.f;
 	MaxLifeSpan = 10.f;
 	CurrentLifeSpan = 0.f;
 	bDestroyOnHit = true;
-	bHarmsMain = true;
+	bHarmsEnemy = true;
+
 }
 
 // Called when the game starts or when spawned
-void ABullet::BeginPlay()
+void AMC2Bullet::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	ForwardVector = GetActorForwardVector();
 
-	HitBox->OnComponentBeginOverlap.AddDynamic(this, &ABullet::OnOverlapBegin);
-
+	HitBox->OnComponentBeginOverlap.AddDynamic(this, &AMC2Bullet::OnOverlapBegin);
 }
 
 // Called every frame
-void ABullet::Tick(float DeltaTime)
+void AMC2Bullet::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
@@ -59,7 +60,7 @@ void ABullet::Tick(float DeltaTime)
 	SetActorLocation(GetActorLocation() + (ForwardVector * DeltaTime * MovementSpeed), true);
 }
 
-void ABullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, 
+void AMC2Bullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if (OtherActor)
@@ -68,55 +69,23 @@ void ABullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* O
 		if (HitTarget)
 		{
 			bool Ignore = OtherComp->ComponentHasTag("Ignore");
-			bool ShieldTag = OtherComp->ComponentHasTag("ShieldTag");
-			if (bHarmsMain == HitTarget->bIsMainCharacter && !Ignore)
+			if (bHarmsEnemy != HitTarget->bIsMainCharacter && !Ignore)
 			{
-				AMain1* MainTarget = Cast<AMain1>(OtherActor);
-				if (MainTarget)
-				{
-					if (MainTarget->bDashing == true)
-					{
-						UE_LOG(LogTemp, Warning, TEXT("Player dodges bullets"));
-					}
-					else
-					{
-						HitTarget->TakeDMG(Damage);
-						OverlapUtility();
-					}
-				}
-				AMain2* MainTarget2 = Cast<AMain2>(OtherActor);
-				if (MainTarget2 && ShieldTag)
-				{
-					UE_LOG(LogTemp, Warning, TEXT("Hit mc2"));
-
-					/**if (MainTarget2)
-					{
-
-					}*/
-				}
-				else if (ShieldTag)
-				{
-					UE_LOG(LogTemp, Warning, TEXT("Bullet Hit Shield."));
-					Destroy();
-				}
-				else
-				{
-					HitTarget->TakeDMG(Damage);
-					OverlapUtility();
-				}
+				HitTarget->TakeDMG(Damage);
+				OverlapUtility();
 				//UE_LOG(LogTemp, Warning, TEXT("Overlap"));
 			}
 		}
 	}
 }
 
-void ABullet::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+void AMC2Bullet::OnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
 
 }
 
-void ABullet::OverlapUtility()
+void AMC2Bullet::OverlapUtility()
 {
 	if (OverlapParticles)
 	{
@@ -131,3 +100,4 @@ void ABullet::OverlapUtility()
 		Destroy();
 	}
 }
+
