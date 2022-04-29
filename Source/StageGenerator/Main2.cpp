@@ -104,7 +104,7 @@ void AMain2::BeginPlay()
 	ShieldBox->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	ShieldBox->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
 	ShieldBox->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-	ShieldBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+	ShieldBox->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Overlap);
 
 	LockOnList.Empty();
 
@@ -351,6 +351,7 @@ void AMain2::DeactivateCollision()
 void AMain2::ShieldBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	UE_LOG(LogTemp, Warning, TEXT("something overlapped"));
 	if (OtherActor)
 	{
 		ABullet* Bullet = Cast<ABullet>(OtherActor);
