@@ -98,6 +98,7 @@ void ABossFightManager::TriggerBoxOnOverlapBegin(UPrimitiveComponent* Overlapped
 				//Activate Boss
 				Boss->Aggro(Main);
 				MainRef = Main;
+				Boss->SpawnDefaultController();
 				bIsActive = true;
 			}
 		}
