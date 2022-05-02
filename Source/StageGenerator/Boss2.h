@@ -31,9 +31,9 @@ public:
 
 	ABoss2();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Movement")
 		EBoss2MovementStatus Boss2MovementStatus;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement") // thinking this could be handy to remember where to continnue after getting stunned
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Movement") // thinking this could be handy to remember where to continnue after getting stunned
 		EBoss2MovementStatus Boss2MemoryStatus;
 	
 	FORCEINLINE void SetBoss2MovementStatus(EBoss2MovementStatus Status) { Boss2MovementStatus = Status; }

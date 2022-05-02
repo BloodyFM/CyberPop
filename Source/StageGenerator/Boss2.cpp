@@ -12,6 +12,9 @@ ABoss2::ABoss2()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	Boss2MemoryStatus = EBoss2MovementStatus::EMS_SplitFire;//first move
+	Boss2MovementStatus = EBoss2MovementStatus::EMS_Idle;
+
 }
 
 void ABoss2::BeginPlay()
