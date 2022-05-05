@@ -44,6 +44,7 @@ ACreature::ACreature()
 
 	InvulnTimer = 0.f;
 	InvulnDuration = 0.f;
+
 }
 
 void ACreature::TakeDMG(float damage)
