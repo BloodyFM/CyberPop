@@ -53,6 +53,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "combat")
 		float AOERange{ 250.f };
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "combat")
+		float BigAOERange{ 500.f };
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "combat")
+		bool bReadyToSlam{ false };
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "combat")
 		float JumpDistance{ 0.f };
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "combat")
@@ -75,7 +79,7 @@ public:
 	ACreature* CombatTarget{ nullptr };
 
 	UFUNCTION(BlueprintCallable)
-	void AOEDamage();
+	void AOEDamage(float range);
 
 	UFUNCTION(BlueprintCallable)
 	void InitiateJumpToCombatTarget();
