@@ -90,6 +90,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats)
 	float DashChargeMax;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		bool bIsAiming;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Decal", meta = (AllowPrivateAccess = "true"))
+		class UDecalComponent* AimProjectile;
+
 	//Left mouse action
 	virtual void LeftMousePressed() override;
 	virtual void LeftMouseReleased() override;

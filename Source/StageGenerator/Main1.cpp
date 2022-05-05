@@ -15,6 +15,10 @@
 #include "Animation/AnimMontage.h"
 #include "Animation/AnimInstance.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Components/Decalcomponent.h"
+#include "Materials/Material.h"
+#include "UObject/ConstructorHelpers.h"
+#include "Camera/CameraComponent.h"
 
 AMain1::AMain1()
 {
@@ -57,11 +61,20 @@ AMain1::AMain1()
 	bAttack3Over = false;
 
 	bSendOutSwordSlice = false;
+	bIsAiming = false;
+
+	AimProjectile = CreateDefaultSubobject<UDecalComponent>("AimProjectile");
+	AimProjectile->SetupAttachment(RootComponent);
+
+	static ConstructorHelpers::FObjectFinder<UMaterial> DecalMaterialAsset(TEXT("Material'/Game/HUD/StickerArrows/Pink_Arrow_Decal_Mat.Pink_Arrow_Decal_Mat'"));
+	if (DecalMaterialAsset.Succeeded())
+	{
+		AimProjectile->SetDecalMaterial(DecalMaterialAsset.Object);
+	}
+	AimProjectile->DecalSize = FVector(16.0f, 32.0f, 32.0f);
+	AimProjectile->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f).Quaternion());
 
 	InvulnDuration = 1.f;
-
-	
-
 }
 
 void AMain1::BeginPlay()
@@ -120,6 +133,30 @@ void AMain1::Tick(float DeltaTime)
 		SetActorRotation(InterpRotation);
 	}
 
+	if (bIsAiming)
+	{
+		//AimProjectile->SetHiddenInGame(false);
+		FHitResult Hit;
+		bool HitResult = false;
+
+
+		HitResult = GetWorld()->GetFirstPlayerController()->GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(ECC_WorldStatic), true, Hit);
+
+		if (HitResult)
+		{
+			if (AimProjectile)
+			{
+				AimProjectile->SetHiddenInGame(false);
+				if (FollowCamera)
+				{
+					FRotator AimDirection = FollowCamera->GetComponentRotation();
+					AimDirection.Pitch = 0.f;
+					SetActorRotation(AimDirection);
+				}
+			}
+		}
+	}
+
 }
 
 void AMain1::LeftMousePressed()
@@ -143,15 +180,19 @@ void AMain1::RightMousePressed()
 	bRightMousePressed = true;
 	if (EquippedWeapon && bCanAttack && DashCharge >= 30.f)
 	{
-		GetCharacterMovement()->MaxWalkSpeed = 0.f;
-		SpecialAttack();
-		bCanAttack = false;
+		bIsAiming = true;
 	}
 }
 
 void AMain1::RightMouseReleased()
 {
 	bRightMousePressed = false;
+	if (bIsAiming)
+	{
+		GetCharacterMovement()->MaxWalkSpeed = 0.f;
+		SpecialAttack();
+		bCanAttack = false;
+	}
 }
 
 void AMain1::SpecialPressed()
@@ -235,6 +276,7 @@ void AMain1::SpecialAttack()
 		AnimInstance->Montage_JumpToSection(("SpecialAttack"), CombatMontage);
 
 		bSendOutSwordSlice = true;
+		//AimProjectile->SetHiddenInGame(true);
 	}
 }
 
