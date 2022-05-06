@@ -49,6 +49,7 @@ ACreature::ACreature()
 
 void ACreature::TakeDMG(float damage)
 {
+	//UE_LOG(LogTemp, Warning, TEXT("auch"));
 	if (IFrameOn != true && InvulnTimer >= InvulnDuration)
 	{
 		InvulnTimer = 0.f;

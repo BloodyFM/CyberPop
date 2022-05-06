@@ -98,6 +98,7 @@ public:
 	bool bLeftMousePressed;
 	bool bRightMousePressed;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats)
 	bool bIsMainCharacter;
 
 	class ACombatSpawner* Master{ nullptr };

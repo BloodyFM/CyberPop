@@ -15,6 +15,8 @@ ABoss2::ABoss2()
 	Boss2MemoryStatus = EBoss2MovementStatus::EMS_SplitFire;//first move
 	Boss2MovementStatus = EBoss2MovementStatus::EMS_Idle;
 
+	bIsMainCharacter = false;
+
 }
 
 void ABoss2::BeginPlay()
@@ -49,10 +51,10 @@ void ABoss2::AOEDamage(float range)
 {
 
 	float distance = FVector(GetActorLocation() - CombatTarget->GetActorLocation()).Size();
-	UE_LOG(LogTemp, Warning, TEXT("slam distance = %f"), distance);
+	//UE_LOG(LogTemp, Warning, TEXT("slam distance = %f"), distance);
 	if (distance <= range)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("slam hit"));
+		//UE_LOG(LogTemp, Warning, TEXT("slam hit"));
 		CombatTarget->TakeDMG(33.f);
 	}
 }
