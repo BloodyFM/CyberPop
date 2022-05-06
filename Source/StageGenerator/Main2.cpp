@@ -6,6 +6,8 @@
 #include "Grunt.h"
 #include "Bullet.h"
 #include "MC2Bullet.h"
+#include "Boss1.h"
+#include "Boss2.h"
 #include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/SkeletalMeshComponent.h"
@@ -315,7 +317,8 @@ void AMain2::BulletSpawn()
 void AMain2::FistBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor->IsA(ALeaper::StaticClass()) || OtherActor->IsA(AGrunt::StaticClass()))
+	if (OtherActor->IsA(ALeaper::StaticClass()) || OtherActor->IsA(AGrunt::StaticClass()) 
+		|| OtherActor->IsA(ABoss1::StaticClass()) || OtherActor->IsA(ABoss2::StaticClass()))
 	{
 		ACreature* Enemy = Cast<ACreature>(OtherActor);
 		if (!Enemy->bIsMainCharacter)

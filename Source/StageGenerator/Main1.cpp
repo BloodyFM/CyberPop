@@ -49,6 +49,8 @@ AMain1::AMain1()
 
 	bCanAttack = true;
 
+	bIsAiming = false;
+
 	//LevelName = GetWorld()->GetMapName();
 
 	bNotAttacked = true;
@@ -143,15 +145,21 @@ void AMain1::RightMousePressed()
 	bRightMousePressed = true;
 	if (EquippedWeapon && bCanAttack && DashCharge >= 30.f)
 	{
-		GetCharacterMovement()->MaxWalkSpeed = 0.f;
-		SpecialAttack();
-		bCanAttack = false;
+		bIsAiming = true;
 	}
 }
 
 void AMain1::RightMouseReleased()
 {
 	bRightMousePressed = false;
+	if (bIsAiming)
+	{
+		//GetCharacterMovement()->MaxWalkSpeed = 0.f;
+		bCanMove = false;
+		SpecialAttack();
+		bCanAttack = false;
+		bIsAiming = false;
+	}
 }
 
 void AMain1::SpecialPressed()

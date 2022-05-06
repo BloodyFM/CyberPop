@@ -45,6 +45,9 @@ public:
 
 	float InvulnDuration;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Movement)
+	bool bCanMove;
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats)
 		float maxHp;
