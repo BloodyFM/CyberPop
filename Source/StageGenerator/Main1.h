@@ -83,6 +83,8 @@ public:
 		float DashStop;
 	UPROPERTY()
 		FTimerHandle DashHandle;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Ability)
+		bool bIsAiming;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats)
 	float DashCharge;

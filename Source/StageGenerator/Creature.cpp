@@ -3,6 +3,7 @@
 
 #include "Creature.h"
 #include "Main1.h"
+#include "Main2.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "Camera/CameraComponent.h"
@@ -44,6 +45,8 @@ ACreature::ACreature()
 
 	InvulnTimer = 0.f;
 	InvulnDuration = 0.f;
+
+	bCanMove = true;
 
 }
 
@@ -104,6 +107,11 @@ void ACreature::Tick(float DeltaTime)
 			{
 				Main1->RemoveLockOnTarget(this);
 			}
+			AMain2* Main2 = Cast<AMain2>(Player);
+			if (Main2)
+			{
+				Main2->RemoveLockOnTarget(this);
+			}
 		}
 		this->Destroy();
 	}
@@ -151,7 +159,7 @@ void ACreature::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ACreature::MoveForward(float Value)
 {
-	if ((Controller != nullptr) && (Value != 0.0f))
+	if ((Controller != nullptr) && (Value != 0.0f) && bCanMove)
 	{
 		// Finds out which way is forward
 		const FRotator Rotation = Controller->GetControlRotation();
@@ -164,7 +172,7 @@ void ACreature::MoveForward(float Value)
 
 void ACreature::MoveRight(float Value)
 {
-	if ((Controller != nullptr) && (Value != 0.0f))
+	if ((Controller != nullptr) && (Value != 0.0f) && bCanMove)
 	{
 		// Finds out which way is forward
 		const FRotator Rotation = Controller->GetControlRotation();

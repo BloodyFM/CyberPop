@@ -6,6 +6,8 @@
 #include "Creature.h"
 #include "Leaper.h"
 #include "Grunt.h"
+#include "Boss1.h"
+#include "Boss2.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "Engine/StaticMeshSocket.h"
@@ -84,7 +86,8 @@ void AWeapon::Equip(AMain1* Char)
 void AWeapon::AttackBoxOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	//if (OtherActor->IsA(ACreature::StaticClass()))
-	if(OtherActor->IsA(ALeaper::StaticClass()) || OtherActor->IsA(AGrunt::StaticClass()))
+	if(OtherActor->IsA(ALeaper::StaticClass()) || OtherActor->IsA(AGrunt::StaticClass()) 
+		|| OtherActor->IsA(ABoss1::StaticClass()) || OtherActor->IsA(ABoss2::StaticClass()))
 	{
 		ACreature* Enemy = Cast<ACreature>(OtherActor);
 		if (!Enemy->bIsMainCharacter)
