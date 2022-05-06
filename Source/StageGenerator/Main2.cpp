@@ -60,6 +60,7 @@ AMain2::AMain2()
 	bIsMainCharacter = true;
 
 	bCanAttack = true;
+	bCanShoot = true;
 
 	bNotAttacked = true;
 	bAttack1Over = false;
@@ -67,6 +68,9 @@ AMain2::AMain2()
 	bAttack3Over = false;
 
 	bShielding = false;
+
+	bAiming = false;
+	bShooting = false;
 
 	Damage = 100.f;
 
@@ -161,6 +165,7 @@ void AMain2::LeftMousePressed()
 	{
 		Attack();
 		bCanAttack = false;
+		bCanShoot = false;
 	}
 }
 
@@ -181,6 +186,7 @@ void AMain2::RightMousePressed()
 	ShieldOpacityOn();
 
 	bCanAttack = false;
+	bCanShoot = false;
 	}
 
 }
@@ -192,6 +198,7 @@ void AMain2::RightMouseReleased()
 	AnimInstance->Montage_Stop(0.3f, CombatMontage);
 	ShieldOpacityOff();
 	bCanAttack = true;
+	bCanShoot = true;
 }
 
 void AMain2::SpecialPressed()
@@ -199,14 +206,31 @@ void AMain2::SpecialPressed()
 	bSpecialPressed = true;
 	if (!bShielding && bCanAttack && BulletCharge >= 10.f)
 	{
+		bAiming = true;
+		bShooting = true;
 		bCanAttack = false;
 		//GetCharacterMovement()->MaxWalkSpeed = 0.f;
-		RangedAttack();
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+
+		if (AnimInstance && CombatMontage)
+		{
+			AnimInstance->Montage_Play(CombatMontage, 1.f);
+			AnimInstance->Montage_JumpToSection(("Blaster_Idle"), CombatMontage);
+
+			bSendOutBullet = true;
+		}
+		
 	}
 }
 void AMain2::SpecialReleased()
 {
 	bSpecialPressed = false;
+	if (bAiming)
+	{
+		bCanShoot = false;
+		bAiming = false;
+		RangedAttack();
+	}
 }
 
 void AMain2::GiveHP()

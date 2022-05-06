@@ -83,9 +83,11 @@ public:
 		float ShieldChargeMinimum;
 
 	//Bullet Floats
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack")
 		bool bShooting;
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack")
+		bool bAiming;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack")
 		bool bCanShoot;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats)
 		float BulletCharge;
