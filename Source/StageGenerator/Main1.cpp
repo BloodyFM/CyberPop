@@ -99,7 +99,10 @@ void AMain1::Tick(float DeltaTime)
 	LevelName.RemoveFromStart(GetWorld()->StreamingLevelsPrefix);
 	if (LevelName != "CharSelect")
 	{
-		hp -= DeltaTime * DrainRate;
+		if (hp >= 1.f)
+		{
+			hp -= DeltaTime * DrainRate;
+		}
 		DashCharge += DeltaTime * DrainRate;
 	}
 	if (DashCharge > DashChargeMax)
