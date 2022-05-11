@@ -32,6 +32,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item | Combat")
 		float Damage;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Item | Combat")
+		bool bIsElectric{ false };
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Main")
 	class AMain1* user{ nullptr };
 
@@ -51,6 +54,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		void DeactivateCollision();
+
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName = "SpawnStunFx"))
+		void SpawnStunFxForDurationOnTarget(float duration, FVector targetlocation);
 
 protected:
 	// Called when the game starts or when spawned

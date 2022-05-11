@@ -98,6 +98,9 @@ void AWeapon::AttackBoxOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 				{
 				user->GiveHP();
 				user->GiveDash();
+				if (bIsElectric)
+					Enemy->ApplyStunn(5.f);
+					SpawnStunFxForDurationOnTarget(5.f, Enemy->GetActorLocation());
 				}
 			}
 			Enemy->TakeDMG(Damage);
