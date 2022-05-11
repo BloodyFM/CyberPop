@@ -51,10 +51,8 @@ void ABoss2::AOEDamage(float range)
 {
 
 	float distance = FVector(GetActorLocation() - CombatTarget->GetActorLocation()).Size();
-	//UE_LOG(LogTemp, Warning, TEXT("slam distance = %f"), distance);
 	if (distance <= range)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("slam hit"));
 		CombatTarget->TakeDMG(33.f);
 	}
 }
