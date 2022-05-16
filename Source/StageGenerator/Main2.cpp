@@ -195,13 +195,16 @@ void AMain2::RightMousePressed()
 }
 void AMain2::RightMouseReleased()
 {
-
-	bShielding = false;
-	UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-	AnimInstance->Montage_Stop(0.3f, CombatMontage);
-	ShieldOpacityOff();
-	bCanAttack = true;
-	bCanShoot = true;
+	if (bShielding)
+	{
+		bShielding = false;
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+		AnimInstance->Montage_Stop(0.3f, CombatMontage);
+		ShieldOpacityOff();
+		bCanAttack = true;
+		bCanShoot = true;
+	}
+	
 }
 
 void AMain2::SpecialPressed()
@@ -353,7 +356,6 @@ void AMain2::FistBoxOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActo
 			if (Enemy->getHp() - Damage <= 0.f)
 			{
 				GiveHP();
-				GiveShield();
 			}
 			Enemy->TakeDMG(Damage);
 		}

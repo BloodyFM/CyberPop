@@ -63,7 +63,7 @@ public:
 		float DashDistance;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Ability)
 		float DashCooldown;
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Ability)
 		bool bCanDash;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack")
 		bool bCanAttack;

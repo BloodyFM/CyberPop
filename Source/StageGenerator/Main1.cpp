@@ -168,7 +168,7 @@ void AMain1::RightMouseReleased()
 void AMain1::SpecialPressed()
 {
 	bSpecialPressed = true;
-	if (DashCharge >= 30.f)
+	if (DashCharge >= 30.f && bCanDash)
 	{
 		Dash();
 	}
