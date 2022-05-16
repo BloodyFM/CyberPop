@@ -49,8 +49,8 @@ public:
 	bool bInterpToTarget{ false };
 
 	// Combat values
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
-	int32 MaxAmmo = 15;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat")
+	int32 MaxAmmo = 5;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat")
 	int32 Ammo;
 	UFUNCTION(BlueprintCallable)

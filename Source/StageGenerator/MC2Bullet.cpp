@@ -71,6 +71,14 @@ void AMC2Bullet::OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor
 			bool Ignore = OtherComp->ComponentHasTag("Ignore");
 			if (bHarmsEnemy != HitTarget->bIsMainCharacter && !Ignore)
 			{
+				if(HitTarget->hp <= Damage)
+				{
+					AMain2* Main = Cast<AMain2>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+					if(Main)
+					{
+						Main->GiveHP();
+					}
+				}
 				HitTarget->TakeDMG(Damage);
 				OverlapUtility();
 				//UE_LOG(LogTemp, Warning, TEXT("Overlap"));
