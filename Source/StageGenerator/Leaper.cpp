@@ -93,6 +93,12 @@ void ALeaper::Tick(float DeltaTime)
 
 		SetActorRotation(InterpRotation);
 	}
+
+	if (bStunned)
+	{
+		DeactivateCollision();
+	}
+
 	if (bStunned && LeaperMovementStatus != ELeaperMovementStatus::EMS_Stun)
 	{
 		if (CombatTarget)
@@ -323,7 +329,7 @@ void ALeaper::AttackBoxOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, 
 	if (OtherActor)
 	{
 		ACreature* Main = Cast<ACreature>(OtherActor);
-		if (Main)
+		if (Main && !bStunned)
 		{
 			if (Main->bIsMainCharacter)
 				HitPlayer();
