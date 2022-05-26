@@ -18,6 +18,8 @@
 #include "Animation/AnimMontage.h"
 #include "Animation/AnimInstance.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "DrawDebugHelpers.h"
 
 
 AMain2::AMain2()
@@ -314,6 +316,43 @@ void AMain2::RangedAttack()
 		AnimInstance->Montage_JumpToSection(("Blaster"), CombatMontage);
 
 		bSendOutBullet = true;
+	}
+}
+
+void AMain2::DeliverAoeDamage()
+{
+	// Set what actors to seek out from it's collision channel
+	TArray<TEnumAsByte<EObjectTypeQuery>> traceObjectTypes;
+	traceObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_Pawn));
+	
+	// Ignore any specific actors
+	TArray<AActor*> ignoreActors;
+	// Ignore self or remove this line to not ignore any
+	ignoreActors.Init(this, 1);
+
+	// Array of actors that are inside the radius of the sphere
+	TArray<AActor*> outActors;
+
+	FVector sphereSpawnLocation = GetActorLocation();
+	// Class that the sphere should hit against and include in the outActors array (Can be null)
+	UClass* seekClass = ACreature::StaticClass();
+	UKismetSystemLibrary::SphereOverlapActors(GetWorld(), sphereSpawnLocation, AoeRange, traceObjectTypes, seekClass, ignoreActors, outActors);
+
+	// Optional: Use to have a visual representation of the SphereOverlapActors
+	//DrawDebugSphere(GetWorld(), sphereSpawnLocation, AoeRange, 12, FColor::Red, true, 10.0f);
+
+	// Finally iterate over the outActor array
+	for (AActor* overlappedActor : outActors) {
+		//UE_LOG(LogTemp, Log, TEXT("OverlappedActor: %s"), *overlappedActor->GetName());
+		ACreature* target = Cast<ACreature>(overlappedActor);
+		if (target)
+		{
+			if (target->hp <= Damage && !target->IFrameOn)
+			{
+				GiveHP();
+			}
+			target->TakeDMG(Damage);
+		}
 	}
 }
 

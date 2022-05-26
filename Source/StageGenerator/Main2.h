@@ -70,6 +70,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Attack")
 		bool bAttack3Over;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Attack")
+		float AoeRange{ 250.f };
+
+	UFUNCTION(BlueprintCallable)
+		void DeliverAoeDamage();
+
 	//Shield floats
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shield")
 		bool bShielding;
