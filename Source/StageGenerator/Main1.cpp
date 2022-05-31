@@ -62,7 +62,7 @@ AMain1::AMain1()
 
 	InvulnDuration = 1.f;
 
-	ResetCombo = 0.f;
+	ResetCombo = 3.f;
 
 	ResetRate = 3.f;
 

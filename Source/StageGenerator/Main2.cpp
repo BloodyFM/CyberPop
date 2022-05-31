@@ -81,7 +81,7 @@ AMain2::AMain2()
 	//FistBoxL->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("LeftFistSocket"));
 	//FistBoxR->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("RightFistSocket"));
 
-	ResetCombo = 0.f;
+	ResetCombo = 4.f;
 	ResetRate = 3.f;
 }
 
