@@ -92,6 +92,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats)
 	float DashChargeMax;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float ResetCombo;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float ResetRate;
+
 	//Left mouse action
 	virtual void LeftMousePressed() override;
 	virtual void LeftMouseReleased() override;

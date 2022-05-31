@@ -62,7 +62,9 @@ AMain1::AMain1()
 
 	InvulnDuration = 1.f;
 
-	
+	ResetCombo = 0.f;
+
+	ResetRate = 3.f;
 
 }
 
@@ -110,6 +112,17 @@ void AMain1::Tick(float DeltaTime)
 		DashCharge = DashChargeMax;
 	}
 
+	if (ResetCombo <= 3.f)
+	{
+		ResetCombo += DeltaTime * DrainRate;
+
+		//UE_LOG(LogTemp, Warning, TEXT("The drainrate is: %f"), ResetCombo);
+	}
+	else
+	{
+		bAttack3Over = true;
+	}
+
 	if (LockOnTarget)
 	{
 		//float radius = LockOnTarget->GetRootComponent().GetScaledCapsuleRadius();
@@ -136,6 +149,7 @@ void AMain1::LeftMousePressed()
 	{
 		Attack();
 		bCanAttack = false;
+		ResetCombo = 0.f;
 	}
 }
 void AMain1::LeftMouseReleased()

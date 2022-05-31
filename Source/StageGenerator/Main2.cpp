@@ -80,6 +80,9 @@ AMain2::AMain2()
 
 	//FistBoxL->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("LeftFistSocket"));
 	//FistBoxR->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, FName("RightFistSocket"));
+
+	ResetCombo = 0.f;
+	ResetRate = 3.f;
 }
 
 void AMain2::BeginPlay()
@@ -147,6 +150,16 @@ void AMain2::Tick(float DeltaTime)
 		RightMouseReleased();
 	}
 
+	if (ResetCombo <= 4.f)
+	{
+		ResetCombo += DeltaTime * DrainRate;
+		UE_LOG(LogTemp, Warning, TEXT("The drainrate is: %f"), ResetCombo);
+	}
+	else
+	{
+		bAttack3Over = true;
+	}
+
 	if (LockOnTarget)
 	{
 		//float radius = LockOnTarget->GetRootComponent().GetScaledCapsuleRadius();
@@ -171,6 +184,7 @@ void AMain2::LeftMousePressed()
 		Attack();
 		bCanAttack = false;
 		bCanShoot = false;
+		ResetCombo = 0.f;
 	}
 }
 

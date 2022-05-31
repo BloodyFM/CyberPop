@@ -33,6 +33,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Movement)
 		float MovementSpeedTank;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float ResetCombo;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
+		float ResetRate;
+
 	//Lock on
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "LockOn")
 		class USphereComponent* LockOnSphere;
