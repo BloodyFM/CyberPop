@@ -157,6 +157,8 @@ void AMain2::Tick(float DeltaTime)
 	}
 	else
 	{
+		bAttack1Over = false;
+		bAttack2Over = false;
 		bAttack3Over = true;
 	}
 

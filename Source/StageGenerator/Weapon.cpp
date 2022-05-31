@@ -26,7 +26,7 @@ AWeapon::AWeapon()
 	CombatCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("CombatCollision"));
 	CombatCollision->SetupAttachment(GetRootComponent());
 
-	Damage = 100.f;
+	Damage = 50.f;
 
 	//bIsAttacking = false;
 }

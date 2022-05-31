@@ -120,7 +120,10 @@ void AMain1::Tick(float DeltaTime)
 	}
 	else
 	{
+		bAttack1Over = false;
+		bAttack2Over = false;
 		bAttack3Over = true;
+		EquippedWeapon->Damage = 50.f;
 	}
 
 	if (LockOnTarget)
@@ -238,6 +241,7 @@ void AMain1::Attack()
 		}
 		else if (bAttack2Over)
 		{
+			EquippedWeapon->Damage = 100.f;
 			AnimInstance->Montage_Play(CombatMontage, 1.f);
 			AnimInstance->Montage_JumpToSection(("Attack"), CombatMontage);
 			bAttack3Over = true;
